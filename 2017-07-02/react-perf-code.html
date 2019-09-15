@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content>
+    <meta name="keyword" content>
+    <link rel="shortcut icon" href="/favicon.ico">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          React性能优化——代码篇 - 御风 | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://wulv.site/2017-07-02/react-perf-code.html">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#React" title="React">React</a>
+                            
+                        </div>
+                        <h1>React性能优化——代码篇</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by 御风 on
+                            2017-07-02
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">御风</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">about</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>如果使用工具检测出页面浪费的渲染次数太多，就需要检查代码是否写法上有问题了。虽然 <code>Virtual DOM</code> 算法可以避免大多无效的真实 <code>DOM</code> 操作，但还是会浪费时间在计算不会改变的虚拟 <code>DOM</code> 上，也就是执行了 <code>render</code> 函数，但发现并没有任何改变。</p>
+<a id="more"></a>
+<h3><span id="key">key</span></h3>
+<p><code>key</code> 属性作为列表的子组件的身份标识，是不能重复的。不写 <code>key</code> 属性， <code>React</code> 会在浏览器控制台报 <code>warning</code> ，有时候我们为了去除这个警告，直接使用数组的索引做 <code>key</code> ，这是不太好的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (&lt;div&gt;</span><br><span class="line">      &#123;this.props.list.map((value, index) =&gt; &#123;</span><br><span class="line">        &lt;Child key=&#123;index&#125; data=&#123;value&#125; /&gt;</span><br><span class="line">      &#125;)&#125;</span><br><span class="line">    &lt;/div&gt;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果 <code>list</code> 发生变化，比如从中间去除一条数据，两次渲染之间 <code>key</code> 相同的子组件，<code>React</code> 认为他们是同一个组件，这样很多个 <code>Child</code> 组件都改变了。最好使用一个唯一的<code>value.id</code>，如果没有 <code>id</code> ，使用<code>value.name</code>之类的也是可以的， <code>key</code> 不必须是数字，只要保证不重复的字符就可以了。</p>
+<h3><span id="shouldcomponentupdate">shouldComponentUpdate</span></h3>
+<p>在 <code>React</code> 生命周期里， <code>shouldComponentUpdate</code> 表示组件是否需要被更新，我们可以做一些判断，来优化组件性能，让一些确定不会改变视图的操作，直接不去计算。<code>shouldComponentUpdate</code> 在初始化时或者使用 <code>forceUpdate</code> 时是不被执行的。 <code>shouldComponentUpdate</code> 默认返回值是 <code>true</code> ，也就是组件一定会更新，如果返回值为 <code>false</code> ，会阻止后面 <code>componentWillUpdate</code> 、 <code>render</code> 、 <code>componentDidUpdate</code> 等操作。并且如果 <code>componentWillReceiveProps</code> 里有 <code>setState</code> 操作也会被阻止。</p>
+<p>比如我们确定如果一个子组件的 <code>name</code> 和 <code>tel</code> 属性不变，子组件就不需要更新：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">shouldComponentUpdate(nextProps) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; data &#125; = <span class="keyword">this</span>.props;</span><br><span class="line">  <span class="keyword">const</span> &#123; name, tel &#125; = data;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> name !== nextProps.data.name</span><br><span class="line">    || tel !== nextProps.data.tel;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们最好只传递 <code>component</code> 需要的 <code>props</code> ，如果传得太多，或者层次传得太深，都会加重 <code>shouldComponentUpdate</code> 里面的数据比较负担，因此，也请慎用<code>&lt;Component {...this.props} /&gt;</code>操作。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pick <span class="keyword">from</span> <span class="string">'lodash/pick'</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> props = pick(<span class="keyword">this</span>.props, [max, min, onClick])</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (&lt;div&gt;</span><br><span class="line">      &lt;NumberInput &#123;...props&#125; /&gt;</span><br><span class="line">    &lt;/div&gt;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="purecomponent">PureComponent</span></h3>
+<p><code>PureComponent</code> 是一个很有效的优化，在前面的博客专门有一篇来介绍：<a href="https://wulv.site/2017-05-31/react-purecomponent.html">React PureComponent 使用指南</a>。</p>
+<h3><span id="stateless-components">Stateless components</span></h3>
+<p><code>React v0.14</code> 就添加了 <code>functional components</code>，他的行为很像只有一个 <code>render</code> 方法的 <code>class components</code>，但没有生命周期方法，也没有实例对象，所以不能够使用 <code>ref</code>。目前来说 <code>functional components</code> 并没有特别优化，在内部也是包装在同一个类中。我们可以直接以函数方式使用，这样可以优化一部分性能：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Avatar = <span class="function">(<span class="params">props</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> &lt;img src=&#123;props.url&#125; /&gt;;</span><br><span class="line">&#125;</span><br><span class="line">// 组件方式使用</span><br><span class="line">render() &#123;</span><br><span class="line">  return (&lt;div&gt;</span><br><span class="line">    &lt;Avatar url=&#123;avatarUrl&#125; /&gt;</span><br><span class="line">  &lt;/div&gt;);</span><br><span class="line">// 函数方式使用</span><br><span class="line">render() &#123;</span><br><span class="line">  return (&lt;div&gt;</span><br><span class="line">    &#123;Avatar(&#123; url: avatarUrl &#125;)&#125;</span><br><span class="line">  &lt;/div&gt;);</span><br></pre></td></tr></table></figure>
+<p><code>React</code> 官方已经承诺，在未来会通过避免不必要的检查和内存分配来对这些组件进行性能优化。</p>
+<h3><span id="constant-elements">constant elements</span></h3>
+<p>我们可以将确定不变的<code>html</code>代码抽离出来直接当做一个变量，写在<code>jsx</code>里，会解析<code>jsx</code>语法，生成<code>React.createElement()</code>代码。如果提升成静态元素，<code>jsx</code>会直接把它们当做一个值，减少了解析过程：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> _ref = &lt;span&gt;Hello World&lt;/span&gt;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyComponent</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div className=&#123;<span class="keyword">this</span>.props.className&#125;&gt;</span><br><span class="line">        &#123;_ref&#125;</span><br><span class="line">      &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>这个操作其实有<code>babel</code>插件<a href="https://github.com/thejameskyle/babel-react-optimize" target="_blank" rel="noopener">babel-react-optimize</a>，可以自动帮我们提取。</p>
+<h3><span id="慎用setstate">慎用setState</span></h3>
+<p>如果是和视图无关的，但有变化的数据，不要放在 <code>state</code> 里面，比如某个组件需要 <code>mouseDown</code> 时标记开始记录， <code>mouseUp</code> 清除记录，最好直接当做实例的一个属性。这样可以避免执行无效的 <code>render</code> 操作。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  record = <span class="literal">false</span></span><br><span class="line">  onMouseDown = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.record = <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  onMouseUp = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.record = <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (&lt;div&gt;</span><br><span class="line">      &lt;button onMouseDown=&#123;this.onMouseDown&#125; onMouseUp=&#123;this.onMouseUp&#125; /&gt;</span><br><span class="line">    &lt;div/&gt;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>总结一下：<code>render</code> 函数里面要用到的东西放<code>props/state</code>（影响 <code>view</code>），其他的不要放进去，写成模块内的私有变量（跨实例共享）或者组件实例上的变量。</p>
+<p>在<code>React PureComponent</code> 使用指南里，<strong>复杂状态与简单状态不要共用一个组件</strong>那一段也提到了慎用<code>setState</code>的原因。</p>
+<h3><span id="慎用bind">慎用bind</span></h3>
+<p><code>Component</code> 的 <code>render</code> 里不使用 <code>bind</code> 绑定 <code>this</code> ，可以放在 <code>constructor</code> 里绑定好，或者直接使用箭头函数，如果要动态传参，可以使用闭包，或者可以直接把处理函数传入子组件，子组建时可以拿到参数，再执行父组件的处理函数就可以了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 闭包</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  removeCharacter = <span class="function"><span class="params">index</span> =&gt;</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; list &#125; = <span class="keyword">this</span>.state;</span><br><span class="line">    list.splice(index, <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">this</span>.setState(&#123; list &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (&lt;div&gt;</span><br><span class="line">      &#123;this.state.list.map((value, index) =&gt;</span><br><span class="line">        &lt;Child onClick=&#123;this.removeCharacter(index)&#125; key=&#123;value.id&#125; data=&#123;value&#125; /&gt;</span><br><span class="line">      )&#125;</span><br><span class="line">    &lt;/div&gt;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 子组件处理</span><br><span class="line">class App extends Component &#123;</span><br><span class="line">  removeCharacter = index =&gt; &#123;</span><br><span class="line">    const &#123; list &#125; = this.state;</span><br><span class="line">    list.splice(index, 1);</span><br><span class="line">    this.setState(&#123; list &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  render() &#123;</span><br><span class="line">    return (&lt;div&gt;</span><br><span class="line">      &#123;this.state.list.map((value, index) =&gt;</span><br><span class="line">        &lt;Child onClick=&#123;this.removeCharacter&#125; index=&#123;index&#125; key=&#123;value.id&#125; data=&#123;value&#125; /&gt;</span><br><span class="line">      )&#125;</span><br><span class="line">    &lt;/div&gt;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">class Child extends Component &#123;</span><br><span class="line">  handleClick = () =&gt; &#123;</span><br><span class="line">    const &#123; index, onClick &#125; =this.props;</span><br><span class="line">    onClick(index);</span><br><span class="line">  &#125;</span><br><span class="line">  render() &#123;</span><br><span class="line">    return &lt;div onClick=&#123;this.handleClick&#125;&gt;</span><br><span class="line">      &#123;this.props.data&#125;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果每次都在 <code>render</code> 里面的 <code>jsx</code> 去 <code>bind</code> 这个方法，会消耗性能，因为每次<code>bind</code>都会返回一个新函数，重复创建静态函数肯定是不合适的（闭包也是这样，但<code>bind</code>内部有一系列的算法，比闭包复杂多了）。</p>
+<p>关于<code>bind</code>性能问题可以查看以下资料：</p>
+<ol>
+<li><a href="https://stackoverflow.com/questions/18895305/will-function-prototype-bind-always-be-slow" target="_blank" rel="noopener">Will Function.prototype.bind() always be slow?</a></li>
+<li><a href="https://stackoverflow.com/questions/17638305/why-is-bind-slower-than-a-closure" target="_blank" rel="noopener">Why is bind slower than a closure?</a></li>
+</ol>
+<p>总的来说，目前浏览器已经足够快了，在<code>bind</code>没有成为性能瓶颈之前，这都只是代码写法上的事。</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2017-08-22/purecomponent-immutablejs.html" data-toggle="tooltip" data-placement="top" title="当PureComponent遇上ImmutableJS ，让React应用性能发挥到极致">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2017-07-01/react-perf-tools.html" data-toggle="tooltip" data-placement="top" title="React性能优化——工具篇">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/img/asset/alipay.png"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/img/asset/wechat.png"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">赞赏一下</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    <style>
+      span.toc-nav-number{
+        display: none
+      }
+    </style>
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">key</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">shouldComponentUpdate</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">PureComponent</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">Stateless components</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">constant elements</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">慎用setState</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">慎用bind</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#React" title="React">React</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/wulv">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/wulv">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 御风 2019 
+                    <br>
+                    Theme by <a href="http://beantech.org">BeanTech</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://www.huweihuang.com">胡伟煌</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://wulv.site/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-82473017-1';
+    var _gaDomain = 'wulv.site';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '66544ac2d89bb4f97d3bf0617cd33271';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

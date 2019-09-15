@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content>
+    <meta name="keyword" content>
+    <link rel="shortcut icon" href="/favicon.ico">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          npm 发包者必读 - 御风 | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://wulv.site/2019-06-17/npm-publish.html">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#npm-publish" title="npm-publish">npm-publish</a>
+                            
+                        </div>
+                        <h1>npm 发包者必读</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by 御风 on
+                            2019-06-17
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">御风</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">about</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>在我们写完一个应用程序后，需要发布到npm上，大多数人可能仅仅使用<code>npm publish</code>就完成了，在这里我讲一下如何更好的发布包。</p>
+<a id="more"></a>
+<h3><span id="1registry">1.registry</span></h3>
+<p>在下载包的时候，很多人喜欢设置<code>taobao</code>镜像，因为<code>npm</code>仓库服务器在国外，下载速度真是急死个人，淘宝镜像每10分钟同步一次<code>npm</code>上的包。发布的时候也一样，一般开源应用基本都发布到<a href="https://www.npmjs.com/" target="_blank" rel="noopener">npmjs</a>，公司内部包的话就会发到私有<code>npm</code>仓库，我们可以在<code>package.json</code>设置一下你想要的发布的地址：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"publishConfig"</span>: &#123;</span><br><span class="line">    <span class="string">"registry"</span>: <span class="string">"http://registry.npm.xxx.com/"</span></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>也可以设置别名</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alias ynpm=<span class="string">"npm --registry=http://registry.npm.xxx.com"</span></span><br><span class="line"><span class="comment">// 发布的时候</span></span><br><span class="line">ynpm publish</span><br></pre></td></tr></table></figure>
+<h3><span id="2权限">2.权限</span></h3>
+<p>发布包需要验证你的账号权限，第一次执行<code>npm adduser</code>,后面就只需要<code>npm login</code>了。有时候我们遇到说你用户名密码错误，但实际并没错，可能是因为你的<code>registry</code>设置成了淘宝镜像的url，npm配置可以前往<code>~/.npmrc</code>查看，可以通过<code>npm config delete registry</code>删除掉。如果你需要一个人帮你一起发包，可以使用<code>npm owner add &lt;user&gt; [&lt;@scope&gt;/]&lt;pkg&gt;</code>去添加一个用户，不过最好还是把发布权限收紧，其他人提MR，包的<code>owner</code>进行<code>code review</code>，然后发包。</p>
+<h3><span id="3发布哪些文件">3.发布哪些文件</span></h3>
+<p>发布一个包，考虑到别人的下载速度，包体积肯定需要尽量小，所以最好不包括源文件，那如何控制只发哪些文件呢？</p>
+<p>第一种方式是在 <code>package.json</code> 里 <code>files</code> 字段来控制，<code>files</code> 字段的值是一个数组，你可以写具体文件名，也可以写目录，还支持 <code>glob</code> 模式。</p>
+<p>第二种就是使用 <code>.npmignore</code> 配置文件，他类似于 <code>.gitignore</code> 文件，其实如果没有 <code>.npmignore</code>，会使用<code>.gitignore</code>来取代他的功能。在包的根目录下，<code>.npmignore</code>不会覆盖 <code>files</code> 字段，但在子目录中会覆盖。</p>
+<p>有些文件不能无法通过配置排除或者包含：</p>
+<ul>
+<li>package.json</li>
+<li>README</li>
+<li>CHANGES / CHANGELOG / HISTORY</li>
+<li>LICENSE / LICENCE</li>
+<li>NOTICE</li>
+<li>main字段中的文件</li>
+</ul>
+<p>以上文件无法忽略。</p>
+<ul>
+<li>.git</li>
+<li>CVS</li>
+<li>.svn</li>
+<li>.DS_Store</li>
+<li>._*</li>
+<li>等等</li>
+</ul>
+<p>以上文件无法发布到 <code>npm</code>。</p>
+<h3><span id="4版本管理">4.版本管理</span></h3>
+<p>npm的发包需要遵循语义化版本，一个版本号包含三个部分：<code>MAJOR.MINOR.PATCH</code>，</p>
+<ul>
+<li>MAJOR 表示主版本号，当你做了不兼容的API修改；</li>
+<li>MINOR 表示次版本号，当你做了向下兼容的功能性新增；</li>
+<li>PATCH 表示修订号,当你做了向下兼容的问题修正;</li>
+</ul>
+<p>我们可以使用<code>npm version</code> 命令来自动修改版本号，比如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// version = v1.0.0</span></span><br><span class="line">npm version patch</span><br><span class="line"><span class="comment">// v1.0.1</span></span><br><span class="line">npm version prepatch</span><br><span class="line"><span class="comment">// v1.0.2-0</span></span><br><span class="line">npm version minor</span><br><span class="line"><span class="comment">// v1.1.0</span></span><br><span class="line">npm version major</span><br><span class="line"><span class="comment">// v2.0.0</span></span><br></pre></td></tr></table></figure>
+<p>一般来说还有先行版本，测试版本等，他们这样命名</p>
+<ul>
+<li>3.1.0-beta.0</li>
+<li>3.1.0-alpha.0</li>
+</ul>
+<p>如果我们发布先行版本，<code>npm version prepatch</code> 命令得出的版本号好像就不够规范了，我们只能使用 <code>npm version 1.0.0-alpha.1</code> 指定版本号，不过还好，在 <code>npm 6.4.0</code> 之后，我们可以使用 <code>--preid</code> 参数：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm version prerelease --preid=alpha</span><br></pre></td></tr></table></figure>
+<h3><span id="5changelog">5.Changelog</span></h3>
+<p>包发布了很多次后，使用者升级就需要知道他是否需要升级，需要查看文档看看有哪些不兼容性改动，所以需要一个 <code>Changelog</code> 来记录每次发布改了些什么。如果手动的维护肯定会有忘记的时候，所以需要使用工具来自动生成，我们可以使用<a href="https://github.com/conventional-changelog/standard-version" target="_blank" rel="noopener">standard-version</a> 这个包来生成，这个包的作用是自动更新版本和生成<code>CHANGELOG</code>。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">standard-version --prerelease alpha</span><br><span class="line">✔ bumping version <span class="keyword">in</span> package.json <span class="keyword">from</span> <span class="number">3.0</span><span class="number">.2</span><span class="number">-0</span> to <span class="number">3.0</span><span class="number">.2</span>-alpha<span class="number">.0</span></span><br><span class="line">✔ created CHANGELOG.md</span><br><span class="line">✔ outputting changes to CHANGELOG.md</span><br><span class="line">✔ committing package.json and CHANGELOG.md</span><br><span class="line">✔ tagging release v3<span class="number">.0</span><span class="number">.2</span>-alpha<span class="number">.0</span></span><br><span class="line">ℹ Run <span class="string">`git push --follow-tags origin master &amp;&amp; npm publish --tag alpha`</span> to publish</span><br><span class="line"><span class="comment">// 再看下生成的Changelog</span></span><br><span class="line"></span><br><span class="line">### Bug Fixes</span><br><span class="line"></span><br><span class="line">* 添加功能<span class="number">1</span> <span class="number">75e2808</span></span><br><span class="line"></span><br><span class="line">### [3.0.2-alpha.0](///compare/v3.0.2-0...v3.0.2-alpha.0) (2019-06-18)</span><br></pre></td></tr></table></figure>
+<p>有了这个工具我们都不需要使用<code>npm version prepatch</code>了。<code>standard-version</code>会根据你的<code>git commit</code>信息，自动生成日志，比如新增啥啥功能，修复啥啥啥bug。自动生成的同时，也就意味着你<code>git commit</code>需要遵循一定格式，比如：</p>
+<ul>
+<li>feat:     A new feature</li>
+<li>fix:      A bug fix</li>
+<li>docs:     Documentation only changes</li>
+<li>style:    Changes that do not affect the meaning of the code (white-space, formatting, missing semi-co<br>
+lons, etc)</li>
+<li>refactor: A code change that neither fixes a bug nor adds a feature</li>
+<li>perf:     A code change that improves performance</li>
+</ul>
+<p>我们可以使用 <a href="https://github.com/conventional-changelog/commitlint" target="_blank" rel="noopener">commitlint</a>搭配 <code>husky</code> 来校验你commit的信息是否符合标准</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"husky"</span>: &#123;</span><br><span class="line">    <span class="string">"hooks"</span>: &#123;</span><br><span class="line">      <span class="string">"commit-msg"</span>: <span class="string">"commitlint -E HUSKY_GIT_PARAMS"</span></span><br><span class="line">    &#125;  </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>也可以使用交互式的方式来生成commit，<a href="https://github.com/commitizen/cz-cli" target="_blank" rel="noopener">commitizen</a>这个包就可以。</p>
+<h3><span id="6tag">6.Tag</span></h3>
+<p>在说明npm的tag之前需要先将一讲git的tag：</p>
+<h5><span id="git的tag">git的tag</span></h5>
+<p>git上打标签我们应该比较熟悉，特别是开发sdk或者APP软件的同学。我们在使用<code>npm version prepatch</code>的时候就会默认执行一次<code>git tag version</code>，我们也可以手动打一个标签<code>git tag -a &lt;tag名&gt; -m &lt;注释文字&gt;</code>，通过<code>git push — tags origin master</code> 将标签推到远程。如果先打好了git的tag，也可以使用<code>npm version from-git</code>通过过来。</p>
+<h5><span id="npm的tag">npm的tag</span></h5>
+<p>我们可以通过 <code>npm dist-tag ls [&lt;pkg&gt;]</code> 来查看一个包的tag，一般来说我们至少会有三种类型的标签</p>
+<ul>
+<li>latest：最后版本，npm install的就是这个</li>
+<li>beta：测试版本，一般内测使用，需要指定版本号install，例如3.1.0-beta.0</li>
+<li>next: 先行版本，npm install foo@next安装，例如3.0.2-next.0</li>
+</ul>
+<p>如果我们需要发布一个测试版本，在发布的时候需要执行</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm publish --tag beta</span><br></pre></td></tr></table></figure>
+<p>如果你直接执行<code>npm publish</code>，那么即使你的版本号是<code>-beta.n</code>，默认会打上<code>latest</code>的标签，别人install的时候也会下载到。这个时候需要我们只要改一下tag：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 不小心发错了</span></span><br><span class="line">latest: <span class="number">1.0</span><span class="number">.1</span>-beta<span class="number">.0</span></span><br><span class="line"><span class="comment">// 将1.0.1-beta.0设置为beta</span></span><br><span class="line">npm dist-tag add my-package@<span class="number">1.0</span><span class="number">.1</span>-beta<span class="number">.0</span> beta</span><br><span class="line">npm dist-tag add my-package@<span class="number">1.0</span><span class="number">.0</span> latest</span><br></pre></td></tr></table></figure>
+<p>这样就万事大吉了。</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2019-06-23/typescript-advance.html" data-toggle="tooltip" data-placement="top" title="typescript-advance">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018-06-10/nvm-guide.html" data-toggle="tooltip" data-placement="top" title="nvm最佳实践">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/img/asset/alipay.png"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/img/asset/wechat.png"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">赞赏一下</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    <style>
+      span.toc-nav-number{
+        display: none
+      }
+    </style>
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">1.registry</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">2.权限</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">3.发布哪些文件</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">4.版本管理</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">5.Changelog</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">6.Tag</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">6.0.1.</span> <span class="toc-nav-text">git的tag</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">6.0.2.</span> <span class="toc-nav-text">npm的tag</span></a></li></ol></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#npm-publish" title="npm-publish">npm-publish</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/wulv">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/wulv">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 御风 2019 
+                    <br>
+                    Theme by <a href="http://beantech.org">BeanTech</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://www.huweihuang.com">胡伟煌</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://wulv.site/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-82473017-1';
+    var _gaDomain = 'wulv.site';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '66544ac2d89bb4f97d3bf0617cd33271';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

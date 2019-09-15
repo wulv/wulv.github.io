@@ -1,0 +1,9 @@
+User-Agent: *
+Disallow: /background
+Disallow: /css
+Disallow: /fancybox
+Disallow: /font-awesome
+Disallow: /img
+Disallow: /js
+Sitemap: https://wulv.site/baidusitemap.xml
+Sitemap: https://wulv.site/sitemap.xml

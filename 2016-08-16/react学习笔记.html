@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content>
+    <meta name="keyword" content>
+    <link rel="shortcut icon" href="/favicon.ico">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          react学习笔记 - 御风 | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://wulv.site/2016-08-16/react学习笔记.html">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#JavaScript" title="JavaScript">JavaScript</a>
+                            
+                              <a class="tag" href="/tags/#react" title="react">react</a>
+                            
+                              <a class="tag" href="/tags/#组件" title="组件">组件</a>
+                            
+                        </div>
+                        <h1>react学习笔记</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by 御风 on
+                            2016-08-16
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">御风</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">about</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h4><span id="1-reactcreateclass是什么">1. <code>React.createClass</code>是什么？</span></h4>
+<p>学习react最先接触的应该就是<code>createClass</code>了，一般我们这么写，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">   var Li=React.createClass(&#123;</span><br><span class="line">	render:function()&#123;</span><br><span class="line">		return (&lt;li className=&quot;li&quot;&gt;test&lt;/li&gt;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p><code>return</code>后面使用<code>jsx</code>语法，可以直接返回<code>html</code>元素，（注意两点，<code>class</code>要改成<code>className</code>，<code>for</code>改为<code>htmlFor</code>）<br>
+首先注意组件名首写字母要大写，其次，每一个组件必须要有一个<code>render</code>的属性，否则报错。这个时候我们把<code>Li</code>打印一下，看看是什么鬼，发现它是一个<code>function</code>，我们把这个组建放入到页面，然后用一个变量接收</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var ss=ReactDOM.render(&lt;Li /&gt;, document.querySelector(&apos;#app&apos;));</span><br></pre></td></tr></table></figure>
+<p>这时候，<code>ss</code>又是什么鬼呢？打印一下，发现他是一个<code>object</code>，其实就是组件的一个实例，如果给<code>Li</code>加一些方法，在<code>ss</code>对象里还可以看到，也就是说可以在外面使用这些方法了，比如设置值，获取值。</p>
+<h4><span id="2-表单">2. 表单</span></h4>
+<p>页面不可避免要使用表单，在<code>react</code>里表单稍微有点不一样，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">    var Input=React.createClass(&#123;</span><br><span class="line">	render:function()&#123;</span><br><span class="line">		return (&lt;input type=&quot;text&quot; defaultValue=&quot;aaa&quot;/&gt;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>这里只能使用<code>defaultValue</code>，直接使用<code>value</code>你会发现这个表单无法输入了，控制台也会提醒你</p>
+<blockquote>
+<p>You provided a <code>value</code> prop to a form field without an <code>onChange</code> handler. This will render a read-only field. If the field should be mutable use <code>defaultValue</code>. Otherwise, set either <code>onChange</code> or <code>readOnly</code>. Check the render method of <code>Li</code>.</p>
+</blockquote>
+<p>也就是说，你要么使用<code>defaultValue</code>，或者加一个 <code>onChange</code>事件，或 <code>readOnly</code>属性表明它只读不会变。</p>
+<h4><span id="3-thisstate与thisprops">3. <code>this.state</code>与<code>this.props</code></span></h4>
+<p>组建写好就是给人使用的，所以你不能把东西写死，要按照别人使用时传给你什么就显示什么，把上面的例子改造一下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">   var Input=React.createClass(&#123;</span><br><span class="line">    _change:function(e)&#123;</span><br><span class="line">		console.log(e.target.value);</span><br><span class="line">	&#125;,</span><br><span class="line">	render:function()&#123;</span><br><span class="line">		return (&lt;input onChange=&#123;this._change&#125; type=&quot;text&quot; defaultValue=&#123;this.props.data&#125;/&gt;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br><span class="line">ReactDOM.render(&lt;Input data=&quot;hello&quot;/&gt;, document.querySelector(&apos;#app&apos;));</span><br></pre></td></tr></table></figure>
+<p>使用组件时，加一个<code>data</code>属性，在组件里面就可以使用<code>this.props.data</code>获取<br>
+注意三点：</p>
+<ol>
+<li>在<code>jsx</code>里面要是有变量必须放在<code>{}</code>里面。</li>
+<li>组件自己内部的方法，可以加一个<code>_</code>，如果想暴露在外面就不加，这样方便其他同事辨认。</li>
+<li>组件自己内部的方法，在每个实例都是同样的一份，不像函数原型共用一份。</li>
+</ol>
+<p>但是，如果此时我想获取到用户输入的值，怎么办？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">     var Input=React.createClass(&#123;</span><br><span class="line">	getInitialState:function()&#123;</span><br><span class="line">		//这个函数只会在初始化时执行一次，以后更新数据不会执行</span><br><span class="line">		return (&#123;data:this.props.data?this.props.data:&quot;&quot;&#125;);</span><br><span class="line">	&#125;,</span><br><span class="line">	_change:function(e)&#123;</span><br><span class="line">		this.setState(&#123;data:e.target.value&#125;);</span><br><span class="line">	&#125;,</span><br><span class="line">	render:function()&#123;</span><br><span class="line">	//每次更新都会执行一次render</span><br><span class="line">		return (&lt;div&gt;&lt;input onChange=&#123;this._change&#125; type=&quot;text&quot; value=&#123;this.state.data&#125;/&gt;&lt;span&gt;&#123;this.state.data&#125;&lt;/span&gt;&lt;/div&gt;);//这里必须要有一个大的标签包着</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;);</span><br><span class="line">ReactDOM.render(&lt;Input data=&quot;hello&quot;/&gt;, document.querySelector(&apos;#app&apos;));</span><br></pre></td></tr></table></figure>
+<p>在这里，<code>getInitialState</code>设置初始化的<code>state</code>值，如果设置了属性，则显示属性，否则为空，每次改变<code>input</code>里的值后，<code>this.setState</code>会重新设置新的状态，把用户输入的值显示到<code>span</code>标签里。<br>
+两者比较来说，<code>this.props</code>是由组件使用者设置的，是不会改变的，除非组件使用者重新设置了这个值（如果使用反模式，把它放在<code>getInitialState</code>里，因为只会在初始化时执行一次，父组件更新数据不会执行，所以这种情况下，虽然<code>this.props</code>改变了，但<code>this.state</code>没变，页面显示就不会更新了，如果保证以后父组件不会改变这个数据，可以这样使用，但如果不能保证就不能这样用了），而<code>this.state</code>是组件内部的一个状态，是会经常改变的。<br>
+如果在父组件想改变子组件的数据，一种方法是子组建那个数据使用<code>this.props</code>，父组建改变属性值，但如果组件内部也想改变这个数据，那就不行了。另一种方法是子组件使用<code>this.state</code>，但暴露一个方法比如<code>set</code>，接收一个参数，里面用<code>this.setState</code>去改变值，父组件拿到子组件实例的引用，调用<code>set</code>改变。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">   var Input=React.createClass(&#123;</span><br><span class="line">	getInitialState:function()&#123;</span><br><span class="line">		return (&#123;data:this.props.data?this.props.data:&quot;&quot;&#125;);</span><br><span class="line">	&#125;,</span><br><span class="line">	_change:function(e)&#123;</span><br><span class="line">		this.setValue(e.target.value);</span><br><span class="line">	&#125;,</span><br><span class="line">	setValue:function(d)&#123;</span><br><span class="line">		this.setState(&#123;data:d&#125;);</span><br><span class="line">	&#125;,</span><br><span class="line">	render:function()&#123;</span><br><span class="line">		return (&lt;div&gt;&lt;input onChange=&#123;this._change&#125; type=&quot;text&quot; value=&#123;this.state.data&#125;/&gt;&lt;span&gt;&#123;this.state.data&#125;&lt;/span&gt;&lt;/div&gt;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br><span class="line">var Page=React.createClass(&#123;</span><br><span class="line">	_click:function()&#123;</span><br><span class="line">		this.refs.input.setValue(&quot;888&quot;);</span><br><span class="line">	&#125;,</span><br><span class="line">	render:function()&#123;</span><br><span class="line">		return (&lt;div&gt;&lt;Input ref=&quot;input&quot; data=&quot;www&quot;/&gt;&lt;button onClick=&#123;this._click&#125;&gt;click me&lt;/button&gt;&lt;/div&gt;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br><span class="line">ReactDOM.render(&lt;Page/&gt;, document.querySelector(&apos;#app&apos;));</span><br></pre></td></tr></table></figure>
+<h4><span id="4-ref是什么">4. <code>ref</code>是什么？</span></h4>
+<ol>
+<li>如果在<code>html</code>里设置<code>ref</code>那么它就指向这个真实的<code>DOM</code>节点。</li>
+<li>如果在组件里设置<code>ref</code>，那么它就指向这个组件实例的引用，和组件里面的<code>this</code>互等。</li>
+</ol>
+<p>我们经常在表单<code>input</code>,<code>select</code>里使用，获取其<code>value</code>,<code>this.refs.ad.value</code>。</p>
+<h4><span id="5-key有什么用">5. <code>key</code>有什么用？</span></h4>
+<p>一个组件，可能会调用很多次，比如在<code>ul</code>里有很多个<code>li</code>，一般我们使用<code>map</code>方法给<code>li</code>循环加上数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">   var Li=React.createClass(&#123;</span><br><span class="line">    getInitialState:function()&#123;</span><br><span class="line">	return (&#123;data:this.props.data?this.props.data:&quot;&quot;&#125;);</span><br><span class="line">&#125;,</span><br><span class="line">render:function()&#123;</span><br><span class="line">	return (&lt;li className=&quot;li&quot;&gt;&#123;this.state.data&#125;&lt;/li&gt;)</span><br><span class="line">&#125;</span><br><span class="line">&#125;);</span><br><span class="line">var data=[&#123;name:&apos;name1&apos;,id:1&#125;,&#123;name:&apos;name2&apos;,id:2&#125;,&#123;name:&apos;name3&apos;,id:3&#125;,&#123;name:&apos;name4&apos;,id:4&#125;];</span><br><span class="line">var List=React.createClass(&#123;</span><br><span class="line"> getInitialState:function()&#123;</span><br><span class="line">	return (&#123;data:data&#125;);</span><br><span class="line">&#125;,</span><br><span class="line">render:function()&#123;</span><br><span class="line">	return(&lt;div&gt;&lt;ul&gt;</span><br><span class="line">	&#123;this.state.data.map(function(item,index)&#123;</span><br><span class="line">		console.log(item);</span><br><span class="line">		return(&lt;Li key=&#123;item.id&#125; data=&#123;item.name&#125; /&gt;)</span><br><span class="line">	&#125;)&#125;</span><br><span class="line">&lt;/ul&gt;&lt;/div&gt;)</span><br><span class="line">&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>这个时候有很多个<code>Li</code>，为了区分各个<code>Li</code>实例，方便以后如果数据修改了可以快速更新，给每个<code>Li</code>设置一个唯一的<code>key</code>，比如把<code>id</code>为3的数据删了，然后重新渲染<code>List</code>，<code>diff</code>把现在的数据和上一次的数据对比，发现少了第三条数据，直接在页面把第三条数据删除，其他的都不用变。如果不设置唯一的<code>key</code>，那么久没办法区分了。</p>
+<h4><span id="6-componentwillreceiveprops">6. <code>componentWillReceiveProps</code></span></h4>
+<p><code>componentWillReceiveProps</code>在将要接受新的<code>props</code>时被调用，虽然说一般<code>props</code>是不可变状态，但情况通常是这样的，当一个父组件包含了一个子组件，子组件的一个<code>props</code>的值是父组件的<code>states</code>的值，那么当父组件可变状态改变时，子组件的<code>props</code>也更新了，于是调用了这个函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">   var Li=React.createClass(&#123;</span><br><span class="line">    getInitialState:function()&#123;</span><br><span class="line">	    return (&#123;data:this.props.data?this.props.data:&quot;1&quot;&#125;)</span><br><span class="line">    &#125;，</span><br><span class="line">    componentWillReceiveProps :function(nextProps)&#123;</span><br><span class="line">		console.log(nextProps,&quot;nextProps&quot;);</span><br><span class="line">		if(nextProps.data!=this.state.data)&#123;</span><br><span class="line">			this.setState(nextProps,function()&#123;</span><br><span class="line">				console.log(this.state,&quot;state2&quot;);</span><br><span class="line">		&#125;);</span><br><span class="line">		console.log(this.state,&quot;state&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;,</span><br><span class="line">	render:function()&#123;</span><br><span class="line">		console.log(this.state。data,&quot;render&quot;);</span><br><span class="line">		return (&lt;li className=&quot;li&quot;&gt;&#123;this.state.data&#125;&lt;/li&gt;)</span><br><span class="line">	&#125;</span><br><span class="line">	&#125;);</span><br><span class="line"> var data=[&#123;name:&apos;name1&apos;,id:1&#125;,&#123;name:&apos;name2&apos;,id:2&#125;,&#123;name:&apos;name3&apos;,id:3&#125;,&#123;name:&apos;name4&apos;,id:4&#125;];</span><br><span class="line"> var List=React.createClass(&#123;</span><br><span class="line">	 getInitialState:function()&#123;</span><br><span class="line">		return (&#123;data:data&#125;);</span><br><span class="line">	&#125;,</span><br><span class="line">	add:function()&#123;</span><br><span class="line">		this.state.data[0].name=&quot;aaa&quot;;</span><br><span class="line">		this.setState(&#123;data:data&#125;);</span><br><span class="line">	&#125;,</span><br><span class="line">	render:function()&#123;</span><br><span class="line">		return(&lt;div&gt;&lt;ul&gt;</span><br><span class="line">		&#123;this.state.data.map(function(item,index)&#123;</span><br><span class="line">			console.log(item);</span><br><span class="line">			return(&lt;Li key=&#123;item.id&#125; data=&#123;item.name&#125; /&gt;)</span><br><span class="line">		&#125;)&#125;</span><br><span class="line">	&lt;/ul&gt;&lt;/div&gt;)</span><br><span class="line">	&#125;</span><br><span class="line">	&#125;)</span><br></pre></td></tr></table></figure>
+<p>调用<code>add</code>方法，将第一个数据的<code>name</code>改变，由于这个时候<code>Li</code>组件已经初始化完成，不会再调用<code>getInitialState</code>了，<code>render</code>里面的<code>{this.state.data}</code>自然也不会改变，所以此时设置<code>componentWillReceiveProps</code>，比较上一个<code>this.state</code>与新传入的<code>props</code>是不是一样，改变了就调用<code>this.setState</code>设置新值，这也是唯一可以在组件更新周期中调用<code>this.setState</code>的函数。<br>
+这种情况只适合于子组件的<code>props</code>反模式为<code>state</code>，在组件内部可能会改变值，如果不会改变的话，在子组件<code>render</code>里直接用<code>props</code>就完事了。</p>
+<h4><span id="7-shouldcomponentupdate">7. <code>shouldComponentUpdate</code></span></h4>
+<p>在上面的例子我们可以看到，我只是改变第一个数据的<code>name</code>，但从控制台打印信息可以看到，<code>render</code>仍然执行了四次，虽然其他三次都是没必要的。如果是几百个组件，就有点浪费性能了，所以我们在<code>&lt;Li&gt;</code>组件里加入<code>shouldComponentUpdate</code>，比较属性是否改变，如果返回<code>true</code>则更新，<code>false</code>则不更新，这样来优化性能。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">   shouldComponentUpdate:function(nextProps,nextState)&#123;</span><br><span class="line">	console.log(nextProps,nextState,&quot;should&quot;)</span><br><span class="line">	return (nextProps.data!=this.state.data)</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>现在，<code>render</code>只执行了一次。如果<code>add</code>方法里还加一句代码，新增一条数据，这时新增的数据不会执行<code>componentWillReceiveProps</code>和<code>shouldComponentUpdate</code>，而是执行了<code>getInitialState</code>，这又是<code>key</code>的好处了。</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2016-10-09/mac-guide-for-fe.html" data-toggle="tooltip" data-placement="top" title="前端Mac入门指南">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2016-08-15/gulp教程之插件.html" data-toggle="tooltip" data-placement="top" title="gulp教程之插件">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/img/asset/alipay.png"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/img/asset/wechat.png"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">赞赏一下</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    <style>
+      span.toc-nav-number{
+        display: none
+      }
+    </style>
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">1. React.createClass是什么？</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">2. 表单</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">3. this.state与this.props</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">4. ref是什么？</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">5. key有什么用？</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">6. componentWillReceiveProps</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">7. shouldComponentUpdate</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#JavaScript" title="JavaScript">JavaScript</a>
+                        
+                          <a class="tag" href="/tags/#react" title="react">react</a>
+                        
+                          <a class="tag" href="/tags/#组件" title="组件">组件</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/wulv">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/wulv">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 御风 2019 
+                    <br>
+                    Theme by <a href="http://beantech.org">BeanTech</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://www.huweihuang.com">胡伟煌</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://wulv.site/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-82473017-1';
+    var _gaDomain = 'wulv.site';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '66544ac2d89bb4f97d3bf0617cd33271';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

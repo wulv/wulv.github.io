@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content>
+    <meta name="keyword" content>
+    <link rel="shortcut icon" href="/favicon.ico">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          从零开发一个健壮的npm包 - 御风 | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://wulv.site/2018-05-05/create-node-package.html">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#node" title="node">node</a>
+                            
+                        </div>
+                        <h1>从零开发一个健壮的npm包</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by 御风 on
+                            2018-05-05
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">御风</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">about</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>最近写 <code>node</code> 的时候遇到一个需求，需要清理某目录下超过3天图片，本来想在npm找个包直接用用，结果没找到合适的，于是就自己撸一个了。</p>
+<p>本文主要讲述如何从零开始开发一个完善健壮的 <code>npm</code> 包，主要涉及到一些工具的使用配置，包的功能不是重点。</p>
+<a id="more"></a>
+<h3><span id="一-配置eslint">一、配置eslint</span></h3>
+<p><a href="http://eslint.cn/" target="_blank" rel="noopener">ESLint</a>是一个代码风格检测工具，比如使用空格还是tab，要不要加分号，使用驼峰命名还是下划线等等。可以保证一个团队的代码风格保持一致。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install eslint -g</span><br><span class="line">eslint init</span><br></pre></td></tr></table></figure>
+<p>根据 <code>eslint</code> 提供的选项结合自己的需求，一路选择好后，会在根目录创建一个 <code>.eslintrc.json</code> 文件，里面一系列的规则配置，这个时候你再写代码，如果不符合规范，编辑器就会报错提示，如果某些目录不想使用校验，可以创建一个 <code>.eslintignore</code>，把不需要校验的目录放进入。为了方便执行校验，我们在 <code>package.json</code> 里配置一下 <code>scripts</code>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&quot;scripts&quot;: &#123;</span><br><span class="line">  &quot;lint&quot;: &quot;eslint --fix src&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以配合githook强制每次提交的时候校验代码：<a href="http://wulv.site/2017-02-17/%E4%BD%BF%E7%94%A8git%E9%92%A9%E5%AD%90%E5%81%9Aeslint%E6%A0%A1%E9%AA%8C.html">使用git钩子做eslint校验</a></p>
+<h3><span id="二-编写代码">二、编写代码</span></h3>
+<p>我们在src目录下编写我们的代码，拆分成具体步骤为</p>
+<ol>
+<li>读取目录下所有文件</li>
+<li>筛选出我们需要处理的文件，比如创建或者修改时间超过3天的图片或者日志</li>
+<li>删除这些文件</li>
+</ol>
+<p>我们分成3个函数：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// readAllFileInfo.js</span></span><br><span class="line"><span class="comment">// 使用fs.readdir读取目录下所有文件</span></span><br><span class="line">fs.readdir(filePath, <span class="function"><span class="keyword">function</span>(<span class="params">err, files</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (err) &#123;</span><br><span class="line">      reject(err);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="built_in">Promise</span>.all(files.map(<span class="function"><span class="params">file</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> filterFile(file, options);</span><br><span class="line">      &#125;))</span><br><span class="line">        .then(<span class="function"><span class="params">deleteFiles</span> =&gt;</span> &#123;</span><br><span class="line">          resolve(deleteFiles.filter(<span class="function"><span class="params">deleteFile</span> =&gt;</span> deleteFile));</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// filterFile.js</span></span><br><span class="line"><span class="comment">// 使用fs.stat读取文件信息，然后筛选出需要删除的文件</span></span><br><span class="line">fs.stat(fileName, (err, stats) =&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) &#123;</span><br><span class="line">    reject(err);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> time = stats[expiredType];</span><br><span class="line">    <span class="keyword">const</span> distanceTime = formatDate(date);</span><br><span class="line">    <span class="keyword">const</span> extName = path.extname(fileName);</span><br><span class="line">    <span class="keyword">if</span> (now - time &gt; distanceTime &amp;&amp; extName === <span class="string">`.<span class="subst">$&#123;ext&#125;</span>`</span>) &#123;</span><br><span class="line">      deleteFile(fileName)</span><br><span class="line">        .then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">          resolve(res);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      resolve();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// deleteFile.js</span></span><br><span class="line"><span class="comment">// 使用fs.unlink删除文件</span></span><br><span class="line">fs.unlink(fileName, err =&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) &#123;</span><br><span class="line">    reject(err);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    resolve(fileName);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>这里主要讲一下解决问题的思路，首先整理一下解决这个问题需要哪些步骤，然后每一个步骤可以抽象成一个函数，想一下函数的传参和返回值，最后可以设计一下更加兼容易扩展的 <code>API</code>，具体代码可以查看仓库：<a href="https://github.com/wulv/del-expired-file%E3%80%82" target="_blank" rel="noopener">https://github.com/wulv/del-expired-file。</a></p>
+<h3><span id="三-使用babel">三、使用babel</span></h3>
+<p>在低版本的 <code>node</code> 可能还不支持某些 <code>es6</code> 语法，比如对象解构等，所以需要使用 <code>babel</code> 编译成低版本也能识别的语法。我们把 <code>src</code> 目录里的代码编译到 <code>lib</code> 目录，然后我们在 <code>package.json</code> 里，把 <code>&quot;main&quot;</code> 改为 <code>&quot;lib/index.js&quot;</code>，这样对外暴露出去的代码就不会出现兼容性问题。</p>
+<p>下载 <code>babel-cli</code> 依赖：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev babel-cli</span><br><span class="line">// 下载预设，预设就是别人配置好的一系列规则，编译在规则内的语法</span><br><span class="line">npm install --save-dev babel-preset-es2015</span><br></pre></td></tr></table></figure>
+<p>配置好 <code>.babelrc</code>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="string">"presets"</span>: [<span class="string">"es2015"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>package.json</code> 里配置一下 <code>scripts</code>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"scripts"</span>: &#123;</span><br><span class="line">  <span class="string">"build"</span>: <span class="string">"babel src -d lib"</span>,</span><br><span class="line">  <span class="string">"build:watch"</span>: <span class="string">"npm run build -- --watch"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样运行 <code>npm run build</code> 就会编译源文件到 <code>lib</code> 目录了。</p>
+<h3><span id="四-编写测试">四、编写测试</span></h3>
+<p>为了保障程序的稳定性，我们一定要写测试用例，特别是当你的程序依赖越来越多的时候，比如你改了A模块，你觉得你的改动都没问题，但一发布出去就会出现意想不到的 <code>bug</code> 因为影响到了你不知道的某个模块。这个时候测试就尤为重要，可以帮你避免很多低级错误。我们使用 <code>mocha</code> 和 <code>chai</code> 做测试框架和断言，下载依赖。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install mocha chai --save-dev</span><br></pre></td></tr></table></figure>
+<p>我们在项目根目录建立一个 <code>test</code> 目录。创建 <code>index.formatDate.js</code>，内容为：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">'use strict'</span>;</span><br><span class="line"><span class="keyword">const</span> chai = <span class="built_in">require</span>(<span class="string">'chai'</span>);</span><br><span class="line"><span class="keyword">const</span> formatDate = <span class="built_in">require</span>(<span class="string">'../lib/formatDate'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> expect = chai.expect;</span><br><span class="line"><span class="keyword">const</span> S = <span class="number">1000</span>;</span><br><span class="line"></span><br><span class="line">describe(<span class="string">'format dete'</span>, () =&gt; &#123;</span><br><span class="line">  it(<span class="string">'test 2s'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    expect(formatDate(<span class="string">'2s'</span>)).to.be.equal(<span class="number">2</span> * S);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>这里只是演示一下基本的语法，代码太多，具体看仓库。然后在 <code>package.json</code> 里再添加一个 <code>scripts</code>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;test&quot;: &quot;npm run build &amp;&amp; mocha -t 5000&quot;</span><br></pre></td></tr></table></figure>
+<h3><span id="五-travis-cicoveralls">五、Travis-CI+Coveralls</span></h3>
+<p><code>Travis-CI</code> 是一个持续集成构建项目，结合<code>github</code> 可以实现很强大的功能，比如你给一个仓库提交 <code>PR</code> 后，可以自动帮你跑完测试用例，如果测试没有通过，就不能 <code>merge</code> 到 <code>master</code>，<code>Coveralls</code> 是一个自动化测试覆盖率的服务，用于收集测试覆盖率报告，对于开源项目免费，配置好这个后，就可以生成一个显示你代码测试覆盖率的 <code>badge</code>。<a href="https://coveralls.io" target="_blank" rel="noopener"><code>Coveralls</code></a> 可以使用 <code>GitHub</code> 账号登录，登录之后可以在 <a href="https://coveralls.io/repos/new" target="_blank" rel="noopener">https://coveralls.io/repos/new</a> 添加需要收集报告的 <code>repo</code>。</p>
+<p>首先安装一下 <code>istanbul</code> 这个工具来检测代码的测试覆盖率：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install istanbul --save-dev</span><br></pre></td></tr></table></figure>
+<p>然后在 package.json 中的 scripts 里添加：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;cover&quot;: &quot;istanbul cover node_modules/mocha/bin/_mocha&quot;</span><br></pre></td></tr></table></figure>
+<p>运行 <code>npm run cover</code> 就可以看到你的代码测试覆盖率了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">========= Coverage summary =========</span><br><span class="line">Statements   : 92.65% ( 63/68 )</span><br><span class="line">Branches     : 75% ( 15/20 )</span><br><span class="line">Functions    : 100% ( 14/14 )</span><br><span class="line">Lines        : 92.65% ( 63/68 )</span><br><span class="line">====================================</span><br></pre></td></tr></table></figure>
+<p>将测试覆盖率报告提交给 <code>Coveralls</code>，首先安装 <code>coveralls</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install coveralls --save-dev</span><br></pre></td></tr></table></figure>
+<p>然后在 <code>package.json</code> 中的 <code>scripts</code> 里添加</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;coveralls&quot;: &quot;npm run cover -- --report lcovonly &amp;&amp; cat ./coverage/lcov.info | coveralls&quot;</span><br></pre></td></tr></table></figure>
+<p>然后创建 <code>.travis.yml</code> 文件，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">sudo: false</span><br><span class="line">language: node_js</span><br><span class="line">os:</span><br><span class="line">  - linux</span><br><span class="line">  - osx</span><br><span class="line">node_js:</span><br><span class="line">  - 6</span><br><span class="line">  - 8</span><br><span class="line">  - 9</span><br><span class="line">  - 10</span><br><span class="line">branches:</span><br><span class="line">  only:</span><br><span class="line">  - master</span><br><span class="line">install:</span><br><span class="line">- npm install</span><br><span class="line">script:</span><br><span class="line">  - npm run lint</span><br><span class="line">  - npm run build</span><br><span class="line">  - npm run cover</span><br><span class="line">after_success:</span><br><span class="line">- npm run coveralls</span><br></pre></td></tr></table></figure>
+<p>将代码推到 <code>github</code> 后，打开 <a href="https://travis-ci.org/" target="_blank" rel="noopener">https://travis-ci.org/</a> ，点开右上角头像 -&gt; profile，把自己仓库的开关打开：</p>
+<p><img src="http://occnbld94.bkt.clouddn.com/1526141757217.jpg" alt></p>
+<p>在 <code>README.md</code> 里添加代码测试覆盖率的 <code>badge</code>，我们可以使用 <a href="http://shields.io" target="_blank" rel="noopener">http://shields.io</a> 来添加 <code>badge</code>，比如还有下载量，star数等这些<code>badge</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[![Build Status](https://travis-ci.org/wulv/del-expired-file.png)](https://travis-ci.org/wulv/del-expired-file)</span><br><span class="line">[![Coverage Status](https://img.shields.io/coveralls/wulv/del-expired-file/master.svg?style=flat)](https://coveralls.io/github/wulv/del-expired-file?branch=master)</span><br></pre></td></tr></table></figure>
+<p>最终可以看到以下效果，当你看到一个 <code>npm</code> 如果显示了测试覆盖率，是不是顿时放心很多了呢？</p>
+<p><img src="http://occnbld94.bkt.clouddn.com/WX20180513-135748@2x.png" alt></p>
+<h3><span id="六-发布">六、发布</span></h3>
+<p>至此我们基本已经写好了一个相对比较健壮的仓库了，现在发布到 <code>npm</code> 上，如果没有 <code>npm</code> 账号的话，需要先<a href="https://www.npmjs.com/signup" target="_blank" rel="noopener">注册</a>一下，然后运行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm adduser</span><br></pre></td></tr></table></figure>
+<p>输入用户名和密码，<code>npm publish</code>，这样你的仓库就发布好了，如果要更新版本，要遵循 <code>Semver(语义化版本号)</code> 规范：</p>
+<ol>
+<li>升级补丁版本号：npm version patch</li>
+<li>升级小版本号：npm version minor</li>
+<li>升级大版本号：npm version major</li>
+</ol>
+<h3><span id="总结">总结</span></h3>
+<p>总结一下上面使用到的工具和技术：</p>
+<p><img src="http://occnbld94.bkt.clouddn.com/npm%20%20package.png" alt></p>
+<p>我们可以看到，如果只是实现功能，把目标定在仅仅实现需求上，写这个 <code>npm</code> 包，用一个文件三个函数就完成了，但是这样的话，这个包估计也就只有你自己用了，以后的维护，修改都会比较麻烦，而使用这一套工具后，就健壮很多了。工作上也是这样，我们需要追求卓越，不断打磨自己的手艺，做出更完美的作品。</p>
+<p>打个广告，杭州有赞诚招前端开发工程师，我们在4月举办了一次前端技术开放日，详情查看链接：<a href="https://tech.youzan.com/fe-open-day-2018/%E3%80%82%E5%85%AC%E5%8F%B8%E7%A6%8F%E5%88%A9%E5%A4%9A%E5%A4%9A%EF%BC%9A" target="_blank" rel="noopener">https://tech.youzan.com/fe-open-day-2018/。公司福利多多：</a></p>
+<blockquote>
+<ul>
+<li>标配：<code>MacBook</code>，报销：显示屏、鼠标、机械键盘</li>
+<li>五险一金、980元/月的餐补、加班打车费报销、年度<code>outing</code>和体检、每人每年有机会参加外部大会/培训等</li>
+<li>各种高大上的聚餐、千奇百怪的团建，长期投食的零食架…</li>
+<li>高配电视、游戏机、桌球、乒乓球、台球、健身器械，还有四驱赛道等，等你来战~</li>
+</ul>
+</blockquote>
+<p>有意向的话请发送简历到<code>wulv#youzan.com</code>。</p>
+<h3><span id="参考链接">参考链接</span></h3>
+<ul>
+<li><a href="http://www.ruanyifeng.com/blog/2015/12/a-mocha-tutorial-of-examples.html" target="_blank" rel="noopener">mocha教程</a></li>
+<li><a href="https://travis-ci.org/" target="_blank" rel="noopener">travis-ci</a></li>
+<li><a href="https://github.com/yangwenmai/how-to-add-badge-in-github-readme" target="_blank" rel="noopener">how-to-add-badge-in-github-readme</a></li>
+</ul>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018-06-10/nvm-guide.html" data-toggle="tooltip" data-placement="top" title="nvm最佳实践">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018-03-27/npm-vs-yarn-vs-npx.html" data-toggle="tooltip" data-placement="top" title="npm vs yarn vs npx">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/img/asset/alipay.png"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/img/asset/wechat.png"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">赞赏一下</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    <style>
+      span.toc-nav-number{
+        display: none
+      }
+    </style>
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">一、配置eslint</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">二、编写代码</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">三、使用babel</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">四、编写测试</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">五、Travis-CI+Coveralls</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">六、发布</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">总结</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">8.</span> <span class="toc-nav-text">参考链接</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#node" title="node">node</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/wulv">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/wulv">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 御风 2019 
+                    <br>
+                    Theme by <a href="http://beantech.org">BeanTech</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://www.huweihuang.com">胡伟煌</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://wulv.site/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-82473017-1';
+    var _gaDomain = 'wulv.site';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '66544ac2d89bb4f97d3bf0617cd33271';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

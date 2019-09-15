@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content>
+    <meta name="keyword" content>
+    <link rel="shortcut icon" href="/favicon.ico">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          git使用小技巧 - 御风 | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://wulv.site/2017-10-18/tips-of-git.html">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#git" title="git">git</a>
+                            
+                        </div>
+                        <h1>git使用小技巧</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by 御风 on
+                            2017-10-18
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">御风</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">about</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>现在代码管理工具基本是git的天下了，除了一些很保守的公司还在用svn，其他基本都是自己搭一个gitlab，下面总结一下git实用技巧。</p>
+<a id="more"></a>
+<ol>
+<li>本地目录如何关联远程仓库?</li>
+</ol>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git remote add &lt;主机名&gt; &lt;网址&gt;</span><br><span class="line">git remote add origin git@github.com:wulv/scripts.git</span><br></pre></td></tr></table></figure>
+<p>一个本地仓库可以设置好几个远程仓库，比如你在<code>gitlab</code>有一个仓库，你也想把它推送到<code>github</code>去，可以使用：</p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git remote add github git@github.com:wulv/scripts.git</span><br><span class="line"></span><br><span class="line">git push &lt;远程主机名&gt; &lt;本地分支名&gt;:&lt;远程分支名&gt;</span><br><span class="line">git push github master:master</span><br><span class="line">// 可以使用-u指定默认主机名</span><br><span class="line">git push -u github master</span><br><span class="line"></span><br><span class="line">git pull &lt;远程主机名&gt; &lt;远程分支名&gt;:&lt;本地分支名&gt;</span><br><span class="line">git pull github master:master</span><br></pre></td></tr></table></figure>
+<p>同理，也可以手动设置本地分支与服务器分支的对应关系，比如我本地叫next分支，服务器叫feature分支，可以使用以下代码设置</p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch --<span class="built_in">set</span>-upstream next origin/feature</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>如何让推送不用每次输密码？</li>
+</ol>
+<p>使用ssh的方式，在GitHub的https://github.com/settings/keys设置一下SSH keys，关于SSH keys生成的问题查看https://help.github.com/articles/connecting-to-github-with-ssh/</p>
+<ol start="3">
+<li>如何回退一个文件？</li>
+</ol>
+<ul>
+<li>如果还没git add，使用<code>ctrl + z</code>吧，如果想回到没添加文件之前，使用 <code>git clean -df</code></li>
+<li>如果已经git add，还没commit，使用<code>git checkout -- files</code></li>
+<li>如果已经git commit，还没有push，使用<code>git reset &lt;commit&gt; files</code>
+<ul>
+<li><code>--soft</code>:软回退表示将本地版本库的头指针全部重置到指定版本，且将这次提交之后的所有变更都移动到暂存区。</li>
+<li><code>--hard</code>:不仅仅是将本地版本库的头指针全部重置到指定版本，也会重置暂存区，并且会将工作区代码也回退到这个版本</li>
+</ul>
+</li>
+<li>如果已经git push了，使用<code>git revert &lt;commit&gt;</code>，恢复一个指定提交。此次操作之前和之后的commit和history都会保留，并且把这次撤销作为一次最新的提交。</li>
+</ul>
+<p>git revert 和 git reset 的区别：</p>
+<ol>
+<li>
+<p>git revert是用一次新的commit来回滚之前的commit，git reset是直接删除指定的commit。</p>
+</li>
+<li>
+<p>git reset 是把HEAD向后移动了一下，而git revert是HEAD继续前进，只是新的commit的内容和要revert的内容正好相反，能够抵消要被revert的内容。</p>
+</li>
+<li>
+<p>已经添加到仓库的文件如何忽略不提交？</p>
+</li>
+</ol>
+<p>将文件添加到<code>.gitignore</code>，然后<code>git rm files</code></p>
+<ol start="5">
+<li>当前分支还没开发完，突然需要到另外一个分支修复紧急bug如何处理？</li>
+</ol>
+<p>首先确认当前分支能否提交，可以提交的直接commit，但一般代码没写完不好提交，就储藏工作目录与暂存区的状态到堆栈中<code>git stash</code>，切换到另外一个分支修复bug后，切回本分支，<code>git stash pop</code>。</p>
+<ol start="6">
+<li>仓库依赖另外一个仓库？</li>
+</ol>
+<p>比如本博客仓库依赖一个主题，但我想对这个主题进行一些修改，首先我从原作者的主题仓库fork一份到我自己仓库，做一些修改，以后原作者有更新我还是想pull过来，这样既享受原作者的更新，又可以自己修改一些特殊的需求。将fork下来的仓库与原作者的仓库关联起来：<code>git remote add remote-name remote-url</code>，然后更新时拉取指定远程仓库指定分支到本地仓库指定分支：<code>git pull remoterepository branchname[:localbranch]</code>。</p>
+<p>在父仓库里添加子仓库：<code>git submodule add repository-url dir</code>，这个时候会出现一个<code>.gitmodules</code>文件,这是一个配置文件，保存了项目 URL 和你拉取到的本地子目录。如果克隆了一个带子模块的项目，你必须运行两个命令：<code>git submodule init</code>来初始化你的本地配置文件，<code>git submodule update</code>来从那个项目拉取所有数据并检出你上层项目里所列的合适的提交。</p>
+<p>submodule与subtree是有区别的，区别在于，submodule其实只是相当于引用了子仓库，你在git clone的时候是不会下载submodule的代码的，必须手动执行git submodule update，更新的话，直接进入对应目录，执行git pull，而subtree则是直接把子仓库下载到父仓库，当成一个正常目录，更新的话相当于重新下载一遍对应仓库指定分支的某次提交。</p>
+<ol start="7">
+<li>如何查看提交记录？</li>
+</ol>
+<ul>
+<li><code>git log</code>：查看提交记录</li>
+<li><code>git log --oneline</code>：查看提交记录，以<code>oneline</code>形式显示，只显示一行，显示的内容时提交hash的前7位与提交消息</li>
+<li><code>git log -p -times</code>：表示查看最近<code>times</code>次提交改变的内容</li>
+<li><code>git log --author=&quot;&lt;pattern&gt;&quot;</code>： 查找某位作者的提交记录</li>
+<li><code>git log --grep=&quot;&lt;pattern&gt;&quot;</code>：搜索有某字符串的提交记录</li>
+<li><code>git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset' --abbrev-commit</code>：图形化显示提交历史</li>
+</ul>
+<ol start="8">
+<li>比较两次提交或分支的差异？</li>
+</ol>
+<ul>
+<li><code>git diff</code>：查看工作目录与暂存区的差异</li>
+<li><code>git diff --cached [&lt;commit&gt;]</code>：查看暂存区与指定提交（默认是HEAD）的差异</li>
+<li><code>git diff &lt;commit&gt;</code>：查看工作目录与指定提交的差异</li>
+<li><code>git diff &lt;commit&gt;</code>：查看工作目录与指定提交的差异</li>
+<li><code>git diff &lt;commit&gt; &lt;commit&gt;</code>：查看两次指定提交的差异</li>
+<li><code>git diff branchname</code>：查看工作目录与指定分支的差异</li>
+<li><code>git diff branchname branchname</code>：查看两个指定分支间的差异</li>
+</ul>
+<p>上面的所有操作后面都可以加上<code>-- dir</code>表示查看该目录下面的差异，在后面加上<code>&gt;patchname.patch</code>表示将差异生成补丁，<code>patchname</code>是补丁的名字。</p>
+<ol start="9">
+<li>有两个稳定版本，将其中一个版本的功能应用到另外一个版本？</li>
+</ol>
+<p>比如某仓库有VIP版和普通版，分别在两个分支开发，普通版更新了一些功能，VIP版也希望将更新应用到分支，但又不能直接将普通版的分支merge过来，这个时候使用：<code>git cherry-pick &lt;commit id&gt;</code>将另一个分支上面的指定提交应用到当前分支上。</p>
+<ol start="10">
+<li>提交信息写错了怎么办？</li>
+</ol>
+<p>比如git commit -am ‘单词拼错’，可以使用 <code>git commit --amend -m“新提交消息”</code>重新设置提交信息。同理如果你本次提交新加了几个文件，你忘了git add，而直接提交了，也可以执行git add xxx，然后<code>git commit --amend --no-edit</code>，<code>--no-edit</code> 表示提交消息不会更改，在 git 上仅为一次提交。</p>
+<p>那如何合并多次提交呢？比如一个小功能，你提交了几十次，这样会造成很多无意义的提交。这个时候可以使用<code>git rebase -i HEAD~4</code>来合并前面4次提交。</p>
+<ol start="11">
+<li>为什么git pull也会有一次merge提交？</li>
+</ol>
+<p>有时候你从master拉了一个分支出来，开发了一周，这期间master分支已经有别人提交了代码进去，你在push之前肯定需要先pull一下，按照 Git 的默认策略，如果远程分支和本地分支之间的提交线图有分叉的话（即不是 fast-forwarded），Git 会执行一次 merge 操作，因此产生一次没意义的提交记录。git pull = git fetch + git merge。<br>
+解决方式：</p>
+<ol>
+<li>
+<p>使用git pull --rebase = git fetch + git rebase origin/master</p>
+</li>
+<li>
+<p>git pull --ff-only = git fetch + git merge --ff-only origin/master</p>
+</li>
+<li>
+<p>分支太多，如何批量删除一个星期之前分支？</p>
+</li>
+</ol>
+  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment">#删除一个星期之前的所有本地分支</span></span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> $(git branch | sed /\*/d); <span class="keyword">do</span> </span><br><span class="line">  <span class="keyword">if</span> [ -n <span class="string">"<span class="variable">$(git log -1 --before='1 week ago' -s $k)</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">    git branch -D <span class="variable">$k</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2017-10-23/vps-security-settings.html" data-toggle="tooltip" data-placement="top" title="vps安全设置">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2017-08-22/purecomponent-immutablejs.html" data-toggle="tooltip" data-placement="top" title="当PureComponent遇上ImmutableJS ，让React应用性能发挥到极致">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/img/asset/alipay.png"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/img/asset/wechat.png"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">赞赏一下</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    <style>
+      span.toc-nav-number{
+        display: none
+      }
+    </style>
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="nav">none</ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#git" title="git">git</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/wulv">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/wulv">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 御风 2019 
+                    <br>
+                    Theme by <a href="http://beantech.org">BeanTech</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://www.huweihuang.com">胡伟煌</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://wulv.site/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-82473017-1';
+    var _gaDomain = 'wulv.site';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '66544ac2d89bb4f97d3bf0617cd33271';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content>
+    <meta name="keyword" content>
+    <link rel="shortcut icon" href="/favicon.ico">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          当PureComponent遇上ImmutableJS ，让React应用性能发挥到极致 - 御风 | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://wulv.site/2017-08-22/purecomponent-immutablejs.html">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#ImmutableJS" title="ImmutableJS">ImmutableJS</a>
+                            
+                        </div>
+                        <h1>当PureComponent遇上ImmutableJS ，让React应用性能发挥到极致</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by 御风 on
+                            2017-08-22
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">御风</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">about</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h3><span id="一-痛点">一、痛点</span></h3>
+<p>在我们的印象中，<code>React</code> 好像就意味着组件化、高性能，我们永远只需要关心数据整体，两次数据之间的 <code>UI</code> 如何变化，则完全交给 <code>React Virtual Dom</code> 的 <code>Diff 算法</code> 去做。以至于我们很随意的去操纵数据，基本优化<code>shouldComponentUpdate</code> 也懒得去写，毕竟不写也能正确渲染。但随着应用体积越来越大，会发现页面好像有点变慢了，特别是组件嵌套比较多，数据结构比较复杂的情况下，随便改变一个表单项，或者对列表做一个筛选都要耗时 <code>100ms</code> 以上，这个时候我们就需要优化了！当然如果没有遇到性能瓶颈，完全不用担心，过早优化是邪恶的。这里我们总结一个很简单的方案来让 <code>React</code> 应用性能发挥到极致。在下面一部分，我们先回顾一下一些背景知识，包括：<code>JavaScript</code> 变量类型和 <code>React</code> 渲染机制，如果你是老鸟可以直接跳过。</p>
+<a id="more"></a>
+<h3><span id="二-一些背景知识的回顾">二、一些背景知识的回顾</span></h3>
+<h4><span id="1-变量类型">1. 变量类型</span></h4>
+<p>JavaScript的变量类型有两类：</p>
+<ul>
+<li>基本类型：6 种基本数据类型， <code>Undefined</code> 、 <code>Null</code> 、 <code>Boolean</code> 、 <code>Number</code> 、 <code>String</code> 、 <code>Symbol</code></li>
+<li>引用类型：统称为 <code>Object</code> 类型，细分为：<code>Object</code> 类型、 <code>Array</code> 类型、 <code>Date</code> 类型、 <code>RegExp</code> 类型、 <code>Function</code> 类型等。</li>
+</ul>
+<p>举个例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> p1 = &#123; <span class="attr">name</span>: <span class="string">'neo'</span> &#125;;</span><br><span class="line"><span class="keyword">let</span> p2 = p1;</span><br><span class="line">p2.name = <span class="string">'dave'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(p1.name); <span class="comment">// dave</span></span><br></pre></td></tr></table></figure>
+<p>在引用类型里，声明一个 <code>p1</code> 的对象，把 <code>p1</code> 赋值给 <code>p2</code> ，此时赋的其实是该对象的在堆中的地址，而不是堆中的数据，也就是两个变量指向的是同一个存储空间，后面 <code>p2.name</code> 改变后，也就影响到了 <code>p1</code>。虽然这样做可以节约内存，但当应用复杂后，就需要很小心的操作数据了，因为一不注意修改一个变量的值可能就影响到了另外一个变量。如果我们想要让他们不互相影响，就需要拷贝出一份一模一样的数据，拷贝又分浅拷贝与深拷贝，浅拷贝只会拷贝第一层的数据，深拷贝则会递归所有层级都拷贝一份，比较消耗性能。</p>
+<h4><span id="2-react">2. React</span></h4>
+<p>在 <code>React</code> 中，每次 <code>setState</code> ， <code>Virtual DOM</code> 会计算出前后两次虚拟 <code>DOM</code> 对象的区别，再去修改真实需要修改的 <code>DOM</code> 。由于 <code>js</code> 计算速度很快，而操作真实 <code>DOM</code> 相对比较慢，<code>Virtual DOM</code> 避免了没必要的真实 <code>DOM</code> 操作，所以 <code>React</code> 性能很好。但随着应用复杂度的提升， <code>DOM</code> 树越来越复杂，大量的对比操作也会影响性能。比如一个 <code>Table</code> 组件，修改其中一行 <code>Tr</code> 组件的某一个字段， <code>setState</code> 后，其他所有行 <code>Tr</code> 组件也都会执行一次 <code>render</code> 函数，这其实是不必要的。我们可以通过 <code>shouldComponentUpdate</code> 函数决定是否更新组件。大部分时候我们是可以知道哪些组件是不会变的，根本就没必要去计算那一部分虚拟 <code>DOM</code>。</p>
+<h3><span id="三-purecomponent">三、 PureComponent</span></h3>
+<p><code>React15.3</code> 中新加了一个类<a href="https://facebook.github.io/react/docs/react-api.html#react.purecomponent" target="_blank" rel="noopener">PureComponent</a>，前身是 <code>PureRenderMixin</code> ，和 <code>Component</code> 基本一样，只不过会在 <code>render</code> 之前帮组件自动执行一次<a href="https://github.com/facebook/fbjs/blob/master/packages/fbjs/src/core/shallowEqual.js" target="_blank" rel="noopener">shallowEqual</a>（浅比较），来决定是否更新组件，浅比较类似于浅复制，只会比较第一层。使用 <code>PureComponent</code> 相当于省去了写 <code>shouldComponentUpdate</code> 函数，当组件更新时，如果组件的 <code>props</code> 和 <code>state</code>：</p>
+<ol>
+<li>引用和第一层数据都没发生改变， <code>render</code> 方法就不会触发，这是我们需要达到的效果。</li>
+<li>虽然第一层数据没变，但引用变了，就会造成虚拟 <code>DOM</code> 计算的浪费。</li>
+<li>第一层数据改变，但引用没变，会造成不渲染，所以需要很小心的操作数据。</li>
+</ol>
+<h3><span id="四-immutablejs">四、 Immutable.js</span></h3>
+<p><a href="https://facebook.github.io/immutable-js/" target="_blank" rel="noopener">Immutable.js</a>是 <code>Facebook</code> 在 <code>2014</code> 年出的持久性数据结构的库，持久性指的是数据一旦创建，就不能再被更改，任何修改或添加删除操作都会返回一个新的 <code>Immutable</code> 对象。可以让我们更容易的去处理缓存、回退、数据变化检测等问题，简化开发。并且提供了大量的类似原生 <code>JS</code> 的方法，还有 <code>Lazy Operation</code> 的特性，完全的函数式编程。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="built_in">Map</span> &#125; <span class="keyword">from</span> <span class="string">"immutable"</span>;</span><br><span class="line"><span class="keyword">const</span> map1 = <span class="built_in">Map</span>(&#123; <span class="attr">a</span>: &#123; <span class="attr">aa</span>: <span class="number">1</span> &#125;, <span class="attr">b</span>: <span class="number">2</span>, <span class="attr">c</span>: <span class="number">3</span> &#125;);</span><br><span class="line"><span class="keyword">const</span> map2 = map1.set(<span class="string">'b'</span>, <span class="number">50</span>);</span><br><span class="line">map1 !== map2; <span class="comment">// true</span></span><br><span class="line">map1.get(<span class="string">'b'</span>); <span class="comment">// 2</span></span><br><span class="line">map2.get(<span class="string">'b'</span>); <span class="comment">// 50</span></span><br><span class="line">map1.get(<span class="string">'a'</span>) === map2.get(<span class="string">'a'</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p>可以看到，修改 <code>map1</code> 的属性返回 <code>map2</code>，他们并不是指向同一存储空间，<code>map1</code> 声明了只有，所有的操作都不会改变它。</p>
+<p><code>ImmutableJS</code> 提供了大量的方法去更新、删除、添加数据，极大的方便了我们操纵数据。除此之外，还提供了原生类型与 <code>ImmutableJS</code> 类型判断与转换方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; fromJS, isImmutable &#125; <span class="keyword">from</span> <span class="string">"immutable"</span>;</span><br><span class="line"><span class="keyword">const</span> obj = fromJS(&#123;</span><br><span class="line">  a: <span class="string">'test'</span>,</span><br><span class="line">  b: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>]</span><br><span class="line">&#125;); <span class="comment">// 支持混合类型</span></span><br><span class="line">isImmutable(obj); <span class="comment">// true</span></span><br><span class="line">obj.size(); <span class="comment">// 2</span></span><br><span class="line"><span class="keyword">const</span> obj1 = obj.toJS(); <span class="comment">// 转换成原生 `js` 类型</span></span><br></pre></td></tr></table></figure>
+<p><code>ImmutableJS</code> 最大的两个特性就是： <code>immutable data structures</code>（持久性数据结构）与 <code>structural sharing</code>（结构共享），持久性数据结构保证数据一旦创建就不能修改，使用旧数据创建新数据时，旧数据也不会改变，不会像原生 <code>js</code> 那样新数据的操作会影响旧数据。而结构共享是指没有改变的数据共用一个引用，这样既减少了深拷贝的性能消耗，也减少了内存。比如下图：<br>
+<img src="http://occnbld94.bkt.clouddn.com/tree.png" alt="tree"></p>
+<p>左边是旧值，右边是新值，我需要改变左边红色节点的值，生成的新值改变了红色节点到根节点路径之间的所有节点，也就是所有青色节点的值，旧值没有任何改变，其他使用它的地方并不会受影响，而超过一大半的蓝色节点还是和旧值共享的。在 <code>ImmutableJS</code> 内部，构造了一种特殊的数据结构，把原生的值结合一系列的私有属性，创建成 <code>ImmutableJS</code> 类型，每次改变值，先会通过私有属性的辅助检测，然后改变对应的需要改变的私有属性和真实值，最后生成一个新的值，中间会有很多的优化，所以性能会很高。</p>
+<h3><span id="五-案例">五、 案例</span></h3>
+<p>首先我们看看只使用 <code>React</code> 的情况下，应用性能为什么会被浪费，代码地址：<a href="https://github.com/wulv/fe-example/tree/master/react-table" target="_blank" rel="noopener">https://github.com/wulv/fe-example/tree/master/react-table</a> ，这个案例使用 <code>create-react-app</code>，检测工具使用 <code>chrome</code> 插件:<a href="https://chrome.google.com/webstore/detail/react-perf/hacmcodfllhbnekmghgdlplbdnahmhmm" target="_blank" rel="noopener">React Perf</a>。执行</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git clone https:<span class="comment">//github.com/wulv/fe-example.git</span></span><br><span class="line">cd fe-example/react-table</span><br><span class="line">yarn</span><br><span class="line">yarn start</span><br></pre></td></tr></table></figure>
+<p>可以打开页面，开始记录，然后随便对一列数据进行修改，结束记录，可以看到我们仅修改了一行数据，但在 <code>Print Wasted</code> 那一项里，渲染 <code>Tr</code> 组件浪费了5次：<br>
+<img src="http://occnbld94.bkt.clouddn.com/react-table.gif" alt="react-table"><br>
+无论是添加，删除操作，都会浪费 <code>n-1</code> 次 <code>render</code> ，因为 <code>App</code> 组件的整个 <code>state</code> 改变了，所有的组件都会重新渲染一次，最后对比出需要真实 <code>DOM</code> 的操作。我们把 <code>Table</code> 组件和 <code>Tr</code> 继承的 <code>Component</code> 改成 <code>PureComponent</code> ，那么， <code>Tr</code> 组件每次更新都会进行一次 <code>shallowEqual</code> 比较，在记录一次，会发现修改操作没有了浪费，然而这个时候添加和删除操作却无效了，分析一下添加的操作是：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">add = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">   <span class="keyword">const</span>  &#123; data &#125; = <span class="keyword">this</span>.state;</span><br><span class="line">   data.push(dataGenerate())</span><br><span class="line">   <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">     data</span><br><span class="line">   &#125;)</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p><code>data.push</code> 并没有改变 <code>data</code> 的引用，所以 <code>PureComponent</code> 的 <code>shallowEqual</code> 直接返回了 <code>true</code> ，不去 <code>render</code> 了。这并不是我们想要的，所以如果使用 <code>Component</code> 必定带来性能浪费，使用 <code>PureComponent</code> 又必须保证组件需要更新时，<code>props</code> 或 <code>state</code> 返回一个新引用，否则不会更新 <code>UI</code>。</p>
+<p>这个时候， <code>ImmutableJS</code> 就可以显示出它的威力了，因为它可以保证每次修改返回一个新的 <code>Object</code>，我们看看修改后的例子：代码地址：<a href="https://github.com/wulv/fe-example/tree/master/react-immutablejs" target="_blank" rel="noopener">https://github.com/wulv/fe-example/tree/master/react-immutablejs</a> ，执行上面例子同样的操作，可以看到：<br>
+<img src="http://occnbld94.bkt.clouddn.com/react-immutablejs.gif" alt="react-immutablejs"><br>
+添加，删除，修改操作，没有一次浪费。没有浪费的原因是所有的子组件都使用了 <code>PureComponent</code>， <code>ImmutableJS</code> 保证修改操作返回一个新引用，并且只修改需要修改的节点（<code>PureComponent</code> 可以渲染出新的改动），其他的节点引用保持不变（<code>PureComponent</code> 直接不渲染）。可以看出， <code>PureComponent</code> 与 <code>ImmutableJS</code> 简直是天生一对啊，如果结合 <code>redux</code> ，那就更加完美了。因为 <code>redux</code> 的 <code>reducer</code> 必须每次返回一个新的引用，有时候我们必须使用 <code>clone</code> 或者 <code>assign</code> 等操作来确保返回新引用，使用 <code>ImmutanleJS</code> 天然保证了这一点，根本就不需要 <code>lodash</code> 等函数库了，比如我使用<code>redux + immutable + react-router + express</code> 写了一个稍微复杂点的例子：<a href="https://github.com/wulv/fe-example/tree/master/express-redux-immutable%EF%BC%8C%E5%8F%AF%E4%BB%A5%E7%9C%8B%E5%88%B0" target="_blank" rel="noopener">https://github.com/wulv/fe-example/tree/master/express-redux-immutable，可以看到</a> <code>pageIndex</code> 的 <code>store</code> 的状态是：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  loading: <span class="literal">false</span>,</span><br><span class="line">  tableData: [&#123;</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"gyu3w0oa5zggkanciclhm2t9"</span>,</span><br><span class="line">    <span class="string">"age"</span>: <span class="number">64</span>,</span><br><span class="line">    <span class="string">"height"</span>: <span class="number">121</span>,</span><br><span class="line">    <span class="string">"width"</span>: <span class="number">71</span>,</span><br><span class="line">    <span class="string">"hobby"</span>: &#123;</span><br><span class="line">      <span class="string">"movie"</span>: &#123;</span><br><span class="line">        <span class="string">"name"</span>: <span class="string">"zrah6zrvm9e512qt4typhkt9"</span>,</span><br><span class="line">        <span class="string">"director"</span>: <span class="string">"t1c69z1vd4em1lh747dp9zfr"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;],</span><br><span class="line">  totle: <span class="number">0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果我需要快速修改 <code>width</code> 的值为90，比较一下使用深拷贝、 <code>Object.assign</code> 和 <code>ImmutableJS</code> 三种方式的区别：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// payload = &#123; name: 'gyu3w0oa5zggkanciclhm2t9', width: 90 &#125;</span></span><br><span class="line"><span class="comment">// 1. 使用深拷贝</span></span><br><span class="line"> updateWidth(state, payload) &#123;</span><br><span class="line">    <span class="keyword">const</span> newState = deepClone(state);</span><br><span class="line">    <span class="keyword">return</span> newState.tableData.map(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (tem.name === payload.name) &#123;</span><br><span class="line">        item.width = payload.width;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> item;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"><span class="comment">// 2. 使用Object.assign</span></span><br><span class="line"> updateWidth(state, payload) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Object</span>.assign(&#123;&#125;, state, &#123;</span><br><span class="line">      tableData: state.state.map(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (item.name === payload.name) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="built_in">Object</span>.assign(&#123;&#125;, item, &#123; <span class="attr">width</span>: payload.width &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> item;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"><span class="comment">// 3. 使用ImmutableJS</span></span><br><span class="line"> updateWidth(state, payload) &#123;</span><br><span class="line">  <span class="keyword">return</span> state.update(<span class="string">'tableData'</span>, list =&gt; list.update(</span><br><span class="line">      list.findIndex(<span class="function">(<span class="params">item</span>) =&gt;</span> item.get(<span class="string">'name'</span>) === payload.name),</span><br><span class="line">    item =&gt; item.set(<span class="string">'width'</span>, payload.width)));</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>使用深拷贝是一个昂贵的操作，而且引用都改变了，必然造成 <code>re-render</code>, 而 <code>Object.assign</code> 会浅复制第一层，虽然不会造成 <code>re-render</code>，但浅复制把其他的属性也都复制了一次，在这里也是很没有必要的，只有使用 <code>ImmutableJS</code> 完美的完成了修改，并且代码也最少。</p>
+<h3><span id="六-优势与不足">六、 优势与不足</span></h3>
+<p>可以看出， <code>ImmutableJS</code> 结合 <code>PureComponent</code> 可以很大程度的减少应用 <code>re-render</code> 的次数，可以大量的提高性能。但还是有一些不足的地方：</p>
+<ol>
+<li>获取组件属性必须用 <code>get</code> 或 <code>getIn</code> 操作（除了 <code>Record</code> 类型），这样和原生的<code>.</code>操作比起来就麻烦多了，如果组件之前已经写好了，还需要大量的修改。</li>
+<li><code>ImmutableJS</code> 库体积比较大，大概56k，开启 <code>gzip</code> 压缩后16k。</li>
+<li>学习成本。</li>
+<li>难以调试，在 <code>redux-logger</code> 里面需要在 <code>stateTransformer</code> 配置里执行 <code>state.toJS()</code>。</li>
+</ol>
+<h3><span id="七-最佳实践">七、 最佳实践</span></h3>
+<p>其实，重要的是编程者需要有性能优化的意识，熟悉 <code>js</code> 引用类型的特性，了解事情的本质比会使用某个框架或库更加重要。用其他的方法也是完全可以达到 <code>ImmutableJS</code> 的效果，比如添加数据可以使用解构操作符的方式：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">add = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">   <span class="keyword">const</span>  &#123; data &#125; = <span class="keyword">this</span>.state;</span><br><span class="line">   <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">     data: [...data, dataGenerate()]</span><br><span class="line">   &#125;)</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>只不过如果数据嵌套比较深，写起来还是比较麻烦。以下有一些小技巧：</p>
+<ol>
+<li>还有两个轻量库可以实现不可变数据结构：<a href="https://github.com/rtfeldman/seamless-immutable" target="_blank" rel="noopener">seamless-immutable</a>或者<a href="https://github.com/kolodny/immutability-helper" target="_blank" rel="noopener">immutability-helper</a>，只不过原理完全不一样，效率也没那么高。</li>
+<li>避免大量使用 <code>toJS</code> 操作，这样会浪费性能。</li>
+<li>不要将简单的 <code>JavaScript</code> 对象与 <code>Immutable.JS</code> 混合</li>
+<li>结合 <code>redux</code> 的时候，要使用<code>import { combineReducers } from 'redux-immutablejs';</code>，因为 <code>redux</code> 的 <code>combineReducers</code> 期望 <code>state</code> 是一个纯净的 <code>js</code> 对象。</li>
+<li>尽量将 <code>state</code> 设计成扁平状的。</li>
+<li>展示组件不要使用 <code>Immutable</code> 数据结构。</li>
+<li>不要在 <code>render</code> 函数里一个 <code>PureComponent</code> 组件的 <code>props</code> 使用 <code>bind(this)</code> 或者 <code>style={ { width: '100px' } }</code>，因为 <code>shallowEqual</code> 一定会对比不通过。</li>
+</ol>
+<h3><span id="八-参考链接">八、 参考链接</span></h3>
+<ul>
+<li><a href="https://medium.com/@dtinth/immutable-js-persistent-data-structures-and-structural-sharing-6d163fbd73d2" target="_blank" rel="noopener">Immutable.js, persistent data structures and structural sharing</a></li>
+<li><a href="http://blog.klipse.tech/javascript/2016/06/23/immutable-perf.html" target="_blank" rel="noopener">immutable.js is much faster than native javascript</a></li>
+<li><a href="https://github.com/camsong/blog/issues/3" target="_blank" rel="noopener">Immutable 详解及 React 中实践</a></li>
+</ul>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2017-10-18/tips-of-git.html" data-toggle="tooltip" data-placement="top" title="git使用小技巧">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2017-07-02/react-perf-code.html" data-toggle="tooltip" data-placement="top" title="React性能优化——代码篇">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/img/asset/alipay.png"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/img/asset/wechat.png"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">赞赏一下</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    <style>
+      span.toc-nav-number{
+        display: none
+      }
+    </style>
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">一、痛点</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">二、一些背景知识的回顾</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">1. 变量类型</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">2. React</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">三、 PureComponent</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">四、 Immutable.js</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">五、 案例</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">六、 优势与不足</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">七、 最佳实践</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">8.</span> <span class="toc-nav-text">八、 参考链接</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#ImmutableJS" title="ImmutableJS">ImmutableJS</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/wulv">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/wulv">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 御风 2019 
+                    <br>
+                    Theme by <a href="http://beantech.org">BeanTech</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://www.huweihuang.com">胡伟煌</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://wulv.site/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-82473017-1';
+    var _gaDomain = 'wulv.site';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '66544ac2d89bb4f97d3bf0617cd33271';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

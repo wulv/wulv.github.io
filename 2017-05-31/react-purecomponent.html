@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content>
+    <meta name="keyword" content>
+    <link rel="shortcut icon" href="/favicon.ico">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          React PureComponent 使用指南 - 御风 | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://wulv.site/2017-05-31/react-purecomponent.html">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#React" title="React">React</a>
+                            
+                        </div>
+                        <h1>React PureComponent 使用指南</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by 御风 on
+                            2017-05-31
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">御风</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">about</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2><span id="为什么使用">为什么使用？</span></h2>
+<p>React15.3中新加了一个 <code>PureComponent</code> 类，顾名思义， <code>pure</code> 是纯的意思， <code>PureComponent</code> 也就是纯组件，取代其前身 <code>PureRenderMixin</code> , <code>PureComponent</code> 是优化 <code>React</code> 应用程序最重要的方法之一，易于实施，只要把继承类从 <code>Component</code> 换成 <code>PureComponent</code> 即可，可以减少不必要的 <code>render</code> 操作的次数，从而提高性能，而且可以少写 <code>shouldComponentUpdate</code> 函数，节省了点代码。</p>
+<h2><span id="原理">原理</span></h2>
+<p>当组件更新时，如果组件的 <code>props</code> 和 <code>state</code> 都没发生改变， <code>render</code> 方法就不会触发，省去 <code>Virtual DOM</code> 的生成和比对过程，达到提升性能的目的。具体就是 <code>React</code> 自动帮我们做了一层浅比较：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">this</span>._compositeType === CompositeTypes.PureClass) &#123;</span><br><span class="line">  shouldUpdate = !shallowEqual(prevProps, nextProps)</span><br><span class="line">  || !shallowEqual(inst.state, nextState);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而 <code>shallowEqual</code> 又做了什么呢？会比较 <code>Object.keys(state | props)</code> 的长度是否一致，每一个 <code>key</code> 是否两者都有，并且是否是一个引用，也就是只比较了第一层的值，确实很浅，所以深层的嵌套数据是对比不出来的。</p>
+<h2><span id="使用指南">使用指南</span></h2>
+<h3><span id="易变数据不能使用一个引用">易变数据不能使用一个引用</span></h3>
+<p>案例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">PureComponent</span> </span>&#123;</span><br><span class="line">  state = &#123;</span><br><span class="line">    items: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">  &#125;</span><br><span class="line">  handleClick = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; items &#125; = <span class="keyword">this</span>.state;</span><br><span class="line">    items.pop();</span><br><span class="line">    <span class="keyword">this</span>.setState(&#123; items &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (&lt;div&gt;</span><br><span class="line">      &lt;ul&gt;</span><br><span class="line">        &#123;this.state.items.map(i =&gt; &lt;li key=&#123;i&#125;&gt;&#123;i&#125;&lt;/li&gt;)&#125;</span><br><span class="line">      &lt;/ul&gt;</span><br><span class="line">      &lt;button onClick=&#123;this.handleClick&#125;&gt;delete&lt;/button&gt;</span><br><span class="line">    &lt;/div&gt;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>会发现，无论怎么点 <code>delete</code> 按钮， <code>li</code> 都不会变少，因为 <code>items</code> 用的是一个引用， <code>shallowEqual</code> 的结果为 <code>true</code> 。改正：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">handleClick = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; items &#125; = <span class="keyword">this</span>.state;</span><br><span class="line">  items.pop();</span><br><span class="line">  <span class="keyword">this</span>.setState(&#123; <span class="attr">items</span>: [].concat(items) &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样每次改变都会产生一个新的数组，也就可以 <code>render</code> 了。这里有一个矛盾的地方，如果没有 <code>items.pop();</code> 操作，每次 <code>items</code> 数据并没有变，但还是 <code>render</code> 了，这不就很操蛋么？呵呵，数据都不变，你 <code>setState</code> 干嘛？</p>
+<h3><span id="不变数据使用一个引用">不变数据使用一个引用</span></h3>
+<h4><span id="子组件数据">子组件数据</span></h4>
+<p>上面易变数据不能使用一个引用的案例中有一个点击删除操作，如果我们删除的代码这么写：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">handleClick = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; items &#125; = <span class="keyword">this</span>.state;</span><br><span class="line">  items.splice(items.length - <span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">  <span class="keyword">this</span>.setState(&#123; items &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>items</code> 的引用也是改变的，但如果 <code>items</code> 里面是引用类型数据：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">items: [&#123;<span class="attr">a</span>: <span class="number">1</span>&#125;, &#123;<span class="attr">a</span>: <span class="number">2</span>&#125;, &#123;<span class="attr">a</span>: <span class="number">3</span>&#125;]</span><br></pre></td></tr></table></figure>
+<p>这个时候</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">state.items[<span class="number">0</span>] === nextState.items[<span class="number">0</span>] <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<p>子组件里还是<code>re-render</code>了。这样就需要我们保证不变的子组件数据的引用不能改变。这个时候可以使用<a href="https://facebook.github.io/immutable-js/" target="_blank" rel="noopener">immutable-js</a>函数库。</p>
+<h4><span id="函数属性">函数属性</span></h4>
+<p>我们在给组件传一个函数的时候，有时候总喜欢:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1</span></span><br><span class="line">&lt;MyInput onChange=&#123;e =&gt; <span class="keyword">this</span>.props.update(e.target.value)&#125; /&gt;</span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line">update(e) &#123;</span><br><span class="line">  <span class="keyword">this</span>.props.update(e.target.value)</span><br><span class="line">&#125;</span><br><span class="line">render() &#123;</span><br><span class="line">  <span class="keyword">return</span> &lt;MyInput onChange=&#123;this.update.bind(this)&#125; /&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由于每次 <code>render</code> 操作 <code>MyInput</code> 组件的 <code>onChange</code> 属性都会返回一个新的函数，由于引用不一样，所以父组件的 <code>render</code> 也会导致 <code>MyInput</code> 组件的 <code>render</code> ，即使没有任何改动，所以需要尽量避免这样的写法，最好这样写：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1,2</span></span><br><span class="line">update = <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">this</span>.props.update(e.target.value)</span><br><span class="line">&#125;</span><br><span class="line">render() &#123;</span><br><span class="line">  <span class="keyword">return</span> &lt;MyInput onChange=&#123;this.update&#125; /&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4><span id="空对象-空数组或固定对象">空对象、空数组或固定对象</span></h4>
+<p>有时候后台返回的数据中，数组长度为0或者对象没有属性会直接给一个 <code>null</code> ，这时候我们需要做一些容错：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">PureComponent</span> </span>&#123;</span><br><span class="line">  state = &#123;</span><br><span class="line">    items: [&#123; <span class="attr">name</span>: <span class="string">'test1'</span> &#125;, <span class="literal">null</span>, &#123; <span class="attr">name</span>: <span class="string">'test3'</span>  &#125;]</span><br><span class="line">  &#125;</span><br><span class="line">  store = <span class="function">(<span class="params">id, value</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; items &#125; = <span class="keyword">this</span>.state;</span><br><span class="line">    items[id]  = assign(&#123;&#125;, items[id], &#123; <span class="attr">name</span>: value &#125;);</span><br><span class="line">    <span class="keyword">this</span>.setState(&#123; <span class="attr">items</span>: [].concat(items) &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (&lt;div&gt;</span><br><span class="line">      &lt;ul&gt;</span><br><span class="line">        &#123;this.state.items.map((i, k) =&gt;</span><br><span class="line">          &lt;Item style=&#123;&#123; color: 'red' &#125;&#125; store=&#123;this.store&#125; key=&#123;k&#125; id=&#123;k&#125; data=&#123;i || &#123;&#125;&#125; /&gt;)</span><br><span class="line">        &#125;</span><br><span class="line">      &lt;/ul&gt;</span><br><span class="line">    &lt;/div&gt;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当某一个子组件调用 <code>store</code> 函数改变了自己的那条属性，触发 <code>render</code> 操作，如果数据是 <code>null</code> 的话 <code>data</code> 属性每次都是一个 <code>{}</code>，<code>{} ==== {}</code> 是 <code>false</code> 的，这样无端的让这几个子组件重新 <code>render</code> 了。<code>{ color: 'red' }</code>也是一样。</p>
+<p>最好设置一个 <code>defaultValue</code> 为 <code>{}</code>,如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> defaultValue = &#123;&#125;</span><br><span class="line"><span class="keyword">const</span> style = &#123; <span class="attr">color</span>: <span class="string">'red'</span> &#125;;</span><br><span class="line">&lt;Item style=&#123;style&#125; store=&#123;<span class="keyword">this</span>.store&#125; key=&#123;k&#125; id=&#123;k&#125; data=&#123;i || defaultValue&#125; /&gt;</span><br></pre></td></tr></table></figure>
+<h3><span id="复杂状态与简单状态不要共用一个组件">复杂状态与简单状态不要共用一个组件</span></h3>
+<p>这点可能和 <code>PureComponent</code> 没多少关系，但做的不好可能会浪费很多性能，比如一个页面上面一部分是一个复杂的列表，下面是一个输入框，抽象代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">change = <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">this</span>.setState(&#123; <span class="attr">value</span>: e.target.value &#125;);</span><br><span class="line">&#125;</span><br><span class="line">render() &#123;</span><br><span class="line">  <span class="keyword">return</span> (&lt;div&gt;</span><br><span class="line">    &lt;ul&gt;</span><br><span class="line">      &#123;this.state.items.map((i, k) =&gt; &lt;li key=&#123;k&#125;&gt; &#123;...&#125;&lt;/li&gt;)&#125;</span><br><span class="line">    &lt;/ul&gt;</span><br><span class="line">    &lt;input value=&#123;this.state.value&#125; onChange=&#123;this.change&#125; /&gt;</span><br><span class="line">  &lt;/div&gt;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>表单和列表其实是没有什么关联的，表单的值也可能经常变动，但它的会给列表也带来必然的 <code>diff</code> 操作，这是没必要的，最好是给列表抽出成一个单独的 <code>PureComponent</code> 组件，这样 <code>state.items</code> 不变的话，列表就不会重新 <code>render</code> 了。</p>
+<h3><span id="与-shouldcomponentupdate-共存">与 <code>shouldComponentUpdate</code> 共存</span></h3>
+<p>如果 <code>PureComponent</code> 里有 <code>shouldComponentUpdate</code> 函数的话，直接使用 <code>shouldComponentUpdate</code> 的结果作为是否更新的依据，没有 <code>shouldComponentUpdate</code> 函数的话，才会去判断是不是 <code>PureComponent</code> ，是的话再去做 <code>shallowEqual</code> 浅比较。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这个变量用来控制组件是否需要更新</span></span><br><span class="line"><span class="keyword">var</span> shouldUpdate = <span class="literal">true</span>;</span><br><span class="line"><span class="comment">// inst 是组件实例</span></span><br><span class="line"><span class="keyword">if</span> (inst.shouldComponentUpdate) &#123;</span><br><span class="line">  shouldUpdate = inst.shouldComponentUpdate(nextProps, nextState, nextContext);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>._compositeType === CompositeType.PureClass) &#123;</span><br><span class="line">    shouldUpdate = !shallowEqual(prevProps, nextProps) ||</span><br><span class="line">      !shallowEqual(inst.state, nextState);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="老版本兼容写法">老版本兼容写法</span></h3>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React &#123; PureComponent, Component &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span> <span class="keyword">extends</span> (<span class="title">PureComponent</span> || <span class="title">Component</span>) </span>&#123;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样在老版本的 <code>React</code> 里也不会挂掉。</p>
+<h2><span id="总结">总结</span></h2>
+<p><code>PureComponent</code> 真正起作用的，只是在一些纯展示组件上，复杂组件用了也没关系，反正 <code>shallowEqual</code> 那一关就过不了，不过记得 <code>props</code> 和 <code>state</code> 不能使用同一个引用哦。</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2017-06-12/test-jest.html" data-toggle="tooltip" data-placement="top" title="使用jest写JavaScript测试">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2017-05-29/从ES6中的extends讲js原型链与继承.html" data-toggle="tooltip" data-placement="top" title="从ES6中的extends讲js原型链与继承">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/img/asset/alipay.png"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/img/asset/wechat.png"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">赞赏一下</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    <style>
+      span.toc-nav-number{
+        display: none
+      }
+    </style>
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">为什么使用？</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">原理</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">使用指南</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">易变数据不能使用一个引用</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">不变数据使用一个引用</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.2.1.</span> <span class="toc-nav-text">子组件数据</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.2.2.</span> <span class="toc-nav-text">函数属性</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.2.3.</span> <span class="toc-nav-text">空对象、空数组或固定对象</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.3.</span> <span class="toc-nav-text">复杂状态与简单状态不要共用一个组件</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.4.</span> <span class="toc-nav-text">与 shouldComponentUpdate 共存</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.5.</span> <span class="toc-nav-text">老版本兼容写法</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">总结</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#React" title="React">React</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/wulv">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/wulv">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 御风 2019 
+                    <br>
+                    Theme by <a href="http://beantech.org">BeanTech</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://www.huweihuang.com">胡伟煌</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://wulv.site/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-82473017-1';
+    var _gaDomain = 'wulv.site';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '66544ac2d89bb4f97d3bf0617cd33271';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
