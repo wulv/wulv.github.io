@@ -141,14 +141,14 @@
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
@@ -208,70 +208,6 @@
             
                 <!-- Main Content -->
 
-
-<div class="post-preview">
-
-    <a href="/2017-02-17/使用git钩子做eslint校验.html">
-        <h2 class="post-title">
-            使用git钩子做eslint校验
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            git hook
-在git中，任何时候当前版本库中出现如commit、push等特殊的事件时，都会触发执行一个或多个任意的shell脚本，我们称之为git钩子，它存放在.git/hooks目录下，我们可以看到目录下有commit-msg.sample、pre-commit.sample等文件，这些都是案例文件，不会执行，要想执行的话把后面的.sample后缀去掉就可以了。
-钩子从执行顺序上分......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by 御风 on
-            2017-02-17
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#git hook" title="git hook">git hook</a>
-            
-              <a href="/tags/#eslint" title="eslint">eslint</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2016-10-09/mac-guide-for-fe.html">
-        <h2 class="post-title">
-            前端Mac入门指南
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            新入手 Mac ，很多配置都搞不懂，下面列一个清单，主要面对前端。
-brew
-brew 又叫 Homebrew ，是 Mac OSX 上的软件包管理工具，能在 Mac 中方便的安装软件或者卸载软件， 只需要一个命令， 非常方便。 brew 类似 ubuntu 系统下的apt-get的功能。官网。
-安装
-1/usr/bin/ruby -e "$(curl -fsSL https://raw.g......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by 御风 on
-            2016-10-09
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#mac" title="mac">mac</a>
-            
-        </div>
-    
-
-</div>
-<hr>
 
 <div class="post-preview">
 
@@ -382,6 +318,78 @@ gulp.src(globs[,options])
 </div>
 <hr>
 
+<div class="post-preview">
+
+    <a href="/2016-07-09/JavaScript设计模式.html">
+        <h2 class="post-title">
+            JavaScript设计模式(1)
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            面向对象的 JavaScript
+JavaScript 没有提供传统面向对象语言中的类式继承，而是通过原型委托的方式来实现对象与对象之间的继承。 JavaScript 也没有在语言层面提供对抽象类和接口的支持。正因为存在这些跟传统面向对象语言不一致的地方，我们在用设计模式编写代码的时候，更要跟传统面向对象语言加以区别。
+动态类型语言和鸭子类型
+编程语言按照数据类型大体可以分为两类，一类是静态......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by 御风 on
+            2016-07-09
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#JavaScript" title="JavaScript">JavaScript</a>
+            
+              <a href="/tags/#设计模式" title="设计模式">设计模式</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2016-07-09/JavaScript中的this.html">
+        <h2 class="post-title">
+            JavaScript中的this
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            this
+跟别的语言大相径庭的是， JavaScript 的 this 总是指向一个对象，而具体指向哪个对象是在运行时基于函数的执行环境动态绑定的，而非函数被声明时的环境。
+this的指向
+除去不常用的 with 和 eval 的情况，具体到实际应用中， this 的指向大致可以分为以下 4 种。
+
+作为对象的方法调用。
+当函数作为对象的方法被调用时， this 指向该对象：
+
+
+12345......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by 御风 on
+            2016-07-09
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#JavaScript" title="JavaScript">JavaScript</a>
+            
+              <a href="/tags/#this" title="this">this</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
 
 
 <!-- Pager -->
@@ -429,6 +437,8 @@ gulp.src(globs[,options])
             
         
             
+        
+            
             <a href="/tags/#html" title="html" rel="2">html</a>
             
         
@@ -438,8 +448,6 @@ gulp.src(globs[,options])
         
             
             <a href="/tags/#JavaScript" title="JavaScript" rel="9">JavaScript</a>
-            
-        
             
         
             
@@ -483,6 +491,8 @@ gulp.src(globs[,options])
             
         
             
+        
+            
             <a href="/tags/#node" title="node" rel="2">node</a>
             
         
@@ -490,8 +500,6 @@ gulp.src(globs[,options])
         
             
             <a href="/tags/#React" title="React" rel="3">React</a>
-            
-        
             
         
             
@@ -615,15 +623,15 @@ gulp.src(globs[,options])
         </li>
       
         <li>
-          <a href="/2019-06-23/sequlize-intro.html">sequlize-intro</a>
-        </li>
-      
-        <li>
-          <a href="/2019-06-23/typescript-advance.html">typescript-advance</a>
-        </li>
-      
-        <li>
           <a href="/2019-06-17/npm-publish.html">npm 发包者必读</a>
+        </li>
+      
+        <li>
+          <a href="/2018-06-10/nvm-guide.html">nvm最佳实践</a>
+        </li>
+      
+        <li>
+          <a href="/2018-05-05/create-node-package.html">从零开发一个健壮的npm包</a>
         </li>
       
     </ul>
@@ -634,7 +642,7 @@ gulp.src(globs[,options])
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03/">March 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">December 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">November 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03/">March 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">December 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">November 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
 
         <hr>

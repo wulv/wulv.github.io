@@ -141,14 +141,14 @@
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
@@ -208,76 +208,6 @@
             
                 <!-- Main Content -->
 
-
-<div class="post-preview">
-
-    <a href="/2018-06-10/nvm-guide.html">
-        <h2 class="post-title">
-            nvm最佳实践
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            1. 使用nvm安装node有什么优势？
-
-安装node很方便，只需要一条命令
-可以轻松切换node版本
-可以多版本node并存
-
-
-2. 安装
-使用 curl安装 nvm：
-1curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash
-完成后 nvm 就被安装在了 ~/.nvm 下了......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by 御风 on
-            2018-06-10
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#node" title="node">node</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2018-05-05/create-node-package.html">
-        <h2 class="post-title">
-            从零开发一个健壮的npm包
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            最近写 node 的时候遇到一个需求，需要清理某目录下超过3天图片，本来想在npm找个包直接用用，结果没找到合适的，于是就自己撸一个了。
-本文主要讲述如何从零开始开发一个完善健壮的 npm 包，主要涉及到一些工具的使用配置，包的功能不是重点。
-
-一、配置eslint
-ESLint是一个代码风格检测工具，比如使用空格还是tab，要不要加分号，使用驼峰命名还是下划线等等。可以保证一个团队的代码风......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by 御风 on
-            2018-05-05
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#node" title="node">node</a>
-            
-        </div>
-    
-
-</div>
-<hr>
 
 <div class="post-preview">
 
@@ -372,6 +302,70 @@ npm install -g create-react-app 和 cr......
 </div>
 <hr>
 
+<div class="post-preview">
+
+    <a href="/2017-10-23/vps-security-settings.html">
+        <h2 class="post-title">
+            vps安全设置
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            前几天 vps 上放的网站突然打不开了，提示数据库错误，登录 vps 上一查，结果发现数据库居然被清空了，只留下一个 waring 的数据库和 readme 的表，表里面留下了黑客的比特币账号、交易网址，说我的数据被他备份了，要勒索我0.2个比特币才还给我数据。😓，我会相信？（其实主要是没钱）之前写了一个备份脚本，结果只备份了10天的，然而刚好国庆放假没看网站，10天早就过期了。猜想应该是......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by 御风 on
+            2017-10-23
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#vps" title="vps">vps</a>
+            
+              <a href="/tags/#linux" title="linux">linux</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017-10-18/tips-of-git.html">
+        <h2 class="post-title">
+            git使用小技巧
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            现在代码管理工具基本是git的天下了，除了一些很保守的公司还在用svn，其他基本都是自己搭一个gitlab，下面总结一下git实用技巧。
+
+
+本地目录如何关联远程仓库?
+
+  12git remote add &lt;主机名&gt; &lt;网址&gt;git remote add origin git@github.com:wulv/scripts.git
+一个本地仓库可以设置好几个远程仓......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by 御风 on
+            2017-10-18
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#git" title="git">git</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
 
 
 <!-- Pager -->
@@ -419,6 +413,8 @@ npm install -g create-react-app 和 cr......
             
         
             
+        
+            
             <a href="/tags/#html" title="html" rel="2">html</a>
             
         
@@ -428,8 +424,6 @@ npm install -g create-react-app 和 cr......
         
             
             <a href="/tags/#JavaScript" title="JavaScript" rel="9">JavaScript</a>
-            
-        
             
         
             
@@ -473,6 +467,8 @@ npm install -g create-react-app 和 cr......
             
         
             
+        
+            
             <a href="/tags/#node" title="node" rel="2">node</a>
             
         
@@ -480,8 +476,6 @@ npm install -g create-react-app 和 cr......
         
             
             <a href="/tags/#React" title="React" rel="3">React</a>
-            
-        
             
         
             
@@ -605,15 +599,15 @@ npm install -g create-react-app 和 cr......
         </li>
       
         <li>
-          <a href="/2019-06-23/sequlize-intro.html">sequlize-intro</a>
-        </li>
-      
-        <li>
-          <a href="/2019-06-23/typescript-advance.html">typescript-advance</a>
-        </li>
-      
-        <li>
           <a href="/2019-06-17/npm-publish.html">npm 发包者必读</a>
+        </li>
+      
+        <li>
+          <a href="/2018-06-10/nvm-guide.html">nvm最佳实践</a>
+        </li>
+      
+        <li>
+          <a href="/2018-05-05/create-node-package.html">从零开发一个健壮的npm包</a>
         </li>
       
     </ul>
@@ -624,7 +618,7 @@ npm install -g create-react-app 和 cr......
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03/">March 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">December 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">November 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03/">March 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">December 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">November 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
 
         <hr>

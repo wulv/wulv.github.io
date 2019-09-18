@@ -48,7 +48,7 @@
     </url>
 
     <url>
-        <loc>https://wulv.site/2015-05-10/%E7%BF%A1%E7%BF%A0%E6%B9%96%E6%A0%A1%E5%8C%BA.html</loc>
+        <loc>https://wulv.site/2013-12-08/%E8%BF%9BE%E5%87%A1%E4%B8%80%E4%B8%AA%E5%A4%9A%E6%9C%88%E6%9D%A5%E7%9A%84%E6%84%9F%E6%82%9F.html</loc>
         <lastmod>2019-08-20T15:43:56.513Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -56,7 +56,7 @@
     </url>
 
     <url>
-        <loc>https://wulv.site/2013-12-08/%E8%BF%9BE%E5%87%A1%E4%B8%80%E4%B8%AA%E5%A4%9A%E6%9C%88%E6%9D%A5%E7%9A%84%E6%84%9F%E6%82%9F.html</loc>
+        <loc>https://wulv.site/2015-05-10/%E7%BF%A1%E7%BF%A0%E6%B9%96%E6%A0%A1%E5%8C%BA.html</loc>
         <lastmod>2019-08-20T15:43:56.513Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -88,23 +88,7 @@
     </url>
 
     <url>
-        <loc>https://wulv.site/2019-06-23/sequlize-intro.html</loc>
-        <lastmod>2019-08-20T15:43:56.511Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
         <loc>https://wulv.site/2017-06-12/test-jest.html</loc>
-        <lastmod>2019-08-20T15:43:56.511Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://wulv.site/2019-06-23/typescript-advance.html</loc>
         <lastmod>2019-08-20T15:43:56.511Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -144,7 +128,7 @@
     </url>
 
     <url>
-        <loc>https://wulv.site/2017-05-31/react-purecomponent.html</loc>
+        <loc>https://wulv.site/2017-07-01/react-perf-tools.html</loc>
         <lastmod>2019-08-20T15:43:56.510Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -152,7 +136,7 @@
     </url>
 
     <url>
-        <loc>https://wulv.site/2017-07-01/react-perf-tools.html</loc>
+        <loc>https://wulv.site/2017-05-31/react-purecomponent.html</loc>
         <lastmod>2019-08-20T15:43:56.510Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -192,7 +176,7 @@
     </url>
 
     <url>
-        <loc>https://wulv.site/2013-11-16/hello-world.html</loc>
+        <loc>https://wulv.site/2014-03-19/html%E5%85%83%E7%B4%A0%E7%9A%84%E5%88%86%E7%B1%BB.html</loc>
         <lastmod>2019-08-20T15:43:56.508Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -200,7 +184,7 @@
     </url>
 
     <url>
-        <loc>https://wulv.site/2014-03-19/html%E5%85%83%E7%B4%A0%E7%9A%84%E5%88%86%E7%B1%BB.html</loc>
+        <loc>https://wulv.site/2013-11-16/hello-world.html</loc>
         <lastmod>2019-08-20T15:43:56.508Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -240,7 +224,7 @@
     </url>
 
     <url>
-        <loc>https://wulv.site/2014-02-19/css%E7%9B%92%E5%AD%90%E6%A8%A1%E5%9E%8B.html</loc>
+        <loc>https://wulv.site/2016-08-15/gulp%E6%95%99%E7%A8%8B%E4%B9%8BAPI.html</loc>
         <lastmod>2019-08-20T15:43:56.507Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -248,7 +232,7 @@
     </url>
 
     <url>
-        <loc>https://wulv.site/2016-08-15/gulp%E6%95%99%E7%A8%8B%E4%B9%8BAPI.html</loc>
+        <loc>https://wulv.site/2014-02-19/css%E7%9B%92%E5%AD%90%E6%A8%A1%E5%9E%8B.html</loc>
         <lastmod>2019-08-20T15:43:56.507Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -312,7 +296,7 @@
     </url>
 
     <url>
-        <loc>https://wulv.site/2016-07-09/JavaScript%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.html</loc>
+        <loc>https://wulv.site/2016-05-15/JavaScript%E8%AF%8D%E6%B3%95%E7%BB%93%E6%9E%84.html</loc>
         <lastmod>2019-08-20T15:43:56.502Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -320,7 +304,7 @@
     </url>
 
     <url>
-        <loc>https://wulv.site/2016-05-15/JavaScript%E8%AF%8D%E6%B3%95%E7%BB%93%E6%9E%84.html</loc>
+        <loc>https://wulv.site/2016-07-09/JavaScript%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.html</loc>
         <lastmod>2019-08-20T15:43:56.502Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
